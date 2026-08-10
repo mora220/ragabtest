@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكاة اختبار الرخصة المهنية للمدربين | إعداد محمد رجب</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            primary: '#1e1b4b',
+                            accent: '#4f46e5',
+                            gold: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 4px;
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(0.99); }
+        }
+        .pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-indigo-500 selection:text-white pb-12">
+
+    <!-- Top Designer & Presentation Banner -->
+    <header class="bg-indigo-950/90 text-white border-b border-indigo-800/50 sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="text-base sm:text-lg font-extrabold text-amber-300 font-cairo leading-tight">
+                        بنك أسئلة محاكاة اختبار الرخصة المهنية للمدربين
+                    </h1>
+                    <p class="text-xs text-indigo-200">
+                        34 سؤالاً تطبيقياً ومواقف تدريبية | تقديم: أ. عبد الله بن مستور الحارثي
+                    </p>
+                </div>
+            </div>
+
+            <!-- Designer Badge (محمد رجب) -->
+            <div class="flex items-center gap-2 bg-indigo-900/80 hover:bg-indigo-900 border border-amber-400/40 px-3 py-1.5 rounded-xl transition shadow-inner text-xs">
+                <i class="fa-solid fa-code text-amber-400 text-sm"></i>
+                <div class="text-right">
+                    <span class="block text-[10px] text-indigo-300 leading-none">إعداد وتصميم التطبيق</span>
+                    <span class="font-bold text-amber-300 text-xs">محمد رجب <span class="font-mono text-white mr-1" dir="ltr">0564826388</span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-3 sm:px-6 pt-6">
+
+        <!-- Controls Bar -->
+        <div class="glass-dark rounded-2xl p-4 mb-6 shadow-2xl text-white flex flex-wrap items-center justify-between gap-4 border border-indigo-500/20">
+            <!-- Progress Info -->
+            <div class="flex items-center gap-4">
+                <div class="text-center">
+                    <span class="text-xs text-indigo-300 block">السؤال الحالي</span>
+                    <span id="current-q-num" class="text-2xl font-black text-amber-400 font-cairo">1</span>
+                    <span class="text-xs text-indigo-300">من 34</span>
+                </div>
+                <div class="h-8 w-px bg-indigo-800/80"></div>
+                <div>
+                    <span class="text-xs text-indigo-300 block">الإنجاز الكلي</span>
+                    <div class="w-32 sm:w-48 bg-indigo-950 rounded-full h-3 overflow-hidden border border-indigo-700/50 mt-1">
+                        <div id="progress-bar" class="bg-gradient-to-l from-emerald-400 to-indigo-500 h-full transition-all duration-300" style="width: 3%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons: Jump to Q & End Exam -->
+            <div class="flex items-center gap-2 flex-wrap">
+                <!-- Jump Button -->
+                <button onclick="openJumpModal()" class="bg-indigo-600/80 hover:bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition border border-indigo-400/30 hover:shadow-lg">
+                    <i class="fa-solid fa-compass text-amber-400"></i>
+                    <span>الانتقال لرقم سؤال</span>
+                </button>
+
+                <!-- Timer -->
+                <div class="bg-indigo-950 px-3 py-2 rounded-xl text-xs sm:text-sm font-mono border border-indigo-800 text-emerald-400 flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="timer-display">00:00</span>
+                </div>
+
+                <!-- Finish Exam Button -->
+                <button onclick="confirmFinishExam()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 sm:px-4 py-2 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition shadow-md shadow-rose-900/30">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                    <span>إنهاء الاختبار</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-container" class="glass-card rounded-3xl p-5 sm:p-8 shadow-2xl transition-all duration-300 relative">
+            
+            <!-- Question Header -->
+            <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-4 mb-6">
+                <div class="flex items-center gap-2">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-lg border border-indigo-200">
+                        سؤال رقم <span id="q-header-number">1</span>
+                    </span>
+                    <span id="q-status-badge" class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-lg">
+                        غير مجاب
+                    </span>
+                </div>
+                <button id="flag-btn" onclick="toggleFlagCurrentQuestion()" class="text-slate-400 hover:text-amber-500 text-sm font-semibold flex items-center gap-1 transition px-2 py-1 rounded-lg hover:bg-slate-100">
+                    <i class="fa-regular fa-bookmark" id="flag-icon"></i>
+                    <span id="flag-text">تمييز السؤال</span>
+                </button>
+            </div>
+
+            <!-- Question Content -->
+            <div class="mb-8">
+                <h2 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-relaxed font-cairo mb-2">
+                    جاري تحميل السؤال...
+                </h2>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="options-container" class="space-y-3 mb-8">
+                <!-- Options injected via JS -->
+            </div>
+
+            <!-- Explanation Box (Shown after answering) -->
+            <div id="explanation-box" class="hidden bg-emerald-50/90 border-2 border-emerald-300 rounded-2xl p-5 mb-8 text-emerald-950 transition-all duration-300">
+                <div class="flex items-center gap-2 text-emerald-800 font-extrabold font-cairo mb-2 text-base">
+                    <i class="fa-solid fa-lightbulb text-amber-500 text-xl"></i>
+                    <span>الشرح والتوضيح الصحيح:</span>
+                </div>
+                <p id="explanation-text" class="text-sm sm:text-base leading-relaxed text-emerald-900 font-medium">
+                    --
+                </p>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="flex items-center justify-between gap-3 border-t border-slate-200 pt-6">
+                <button id="prev-btn" onclick="prevQuestion()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-5 py-2.5 rounded-xl transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed text-sm">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+
+                <div class="text-xs text-slate-500 font-bold hidden sm:block">
+                    استخدم الأسهم للتنقل السريع
+                </div>
+
+                <button id="next-btn" onclick="nextQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-indigo-600/30 text-sm">
+                    <span>التالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen (Hidden by default) -->
+        <div id="results-container" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-2xl">
+            <!-- Header -->
+            <div class="text-center border-b border-slate-200 pb-6 mb-8">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-indigo-600 to-emerald-500 text-white rounded-3xl shadow-xl text-3xl mb-4">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-cairo mb-2">
+                    نتيجة اختبار محاكاة الرخصة المهنية
+                </h2>
+                <p class="text-slate-600 text-sm">
+                    تم حساب النتيجة بناءً على أدائك في الأسئلة التي قمت بحلها
+                </p>
+            </div>
+
+            <!-- Score Cards Matrix -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <!-- Attempted Score % -->
+                <div class="bg-indigo-900 text-white p-4 rounded-2xl text-center shadow-md">
+                    <span class="text-xs text-indigo-300 block font-semibold">نسبة الأسئلة المحلولة</span>
+                    <span id="res-score-attempted-pct" class="text-3xl font-black font-cairo text-amber-400 my-1 block">0%</span>
+                    <span id="res-score-badge" class="text-[11px] bg-indigo-800 text-indigo-200 px-2 py-0.5 rounded-full inline-block">--</span>
+                </div>
+
+                <!-- Total Score % -->
+                <div class="bg-slate-900 text-white p-4 rounded-2xl text-center shadow-md">
+                    <span class="text-xs text-slate-400 block font-semibold">النسبة الكلية (من 34)</span>
+                    <span id="res-score-total-pct" class="text-3xl font-black font-cairo text-emerald-400 my-1 block">0%</span>
+                    <span class="text-[11px] text-slate-400">إجمالي الأسئلة</span>
+                </div>
+
+                <!-- Correct Count -->
+                <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-2xl text-center">
+                    <span class="text-xs text-emerald-700 block font-semibold">الإجابات الصحيحة</span>
+                    <span id="res-correct-count" class="text-3xl font-black font-cairo text-emerald-600 my-1 block">0</span>
+                    <span class="text-[11px] text-emerald-700">سؤال صحيح</span>
+                </div>
+
+                <!-- Wrong & Unanswered -->
+                <div class="bg-rose-50 border border-rose-200 text-rose-900 p-4 rounded-2xl text-center">
+                    <span class="text-xs text-rose-700 block font-semibold">أخطاء / غير مجاب</span>
+                    <div class="flex items-center justify-center gap-2 mt-1">
+                        <span id="res-wrong-count" class="text-2xl font-black text-rose-600 font-cairo">0</span>
+                        <span class="text-slate-400">/</span>
+                        <span id="res-unanswered-count" class="text-2xl font-black text-slate-500 font-cairo">0</span>
+                    </div>
+                    <span class="text-[11px] text-rose-700">خاطئة / متروكة</span>
+                </div>
+            </div>
+
+            <!-- Time Taken Info -->
+            <div class="bg-slate-100 rounded-xl p-3 text-center text-sm font-semibold text-slate-700 mb-8 flex items-center justify-center gap-2">
+                <i class="fa-regular fa-clock text-indigo-600"></i>
+                <span>الوقت المستغرق في الاختبار: <span id="res-time-taken" class="font-mono text-indigo-900 font-bold">00:00</span></span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-4 border-b border-slate-200 pb-8 mb-8">
+                <button onclick="restartFullExam()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-3 rounded-2xl transition shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>إعادة الاختبار كاملاً</span>
+                </button>
+
+                <button onclick="toggleReviewSection()" class="bg-slate-800 hover:bg-slate-900 text-white font-extrabold px-6 py-3 rounded-2xl transition shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span id="review-btn-text">مراجعة كشف الأسئلة والشروحات</span>
+                </button>
+            </div>
+
+            <!-- Detailed Question Review Section -->
+            <div id="review-section" class="space-y-6">
+                <h3 class="text-xl font-black text-slate-900 font-cairo border-r-4 border-indigo-600 pr-3">
+                    مراجعة جميع الأسئلة والإجابات النموذجية
+                </h3>
+                <div id="review-list-container" class="space-y-4">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Jump to Question Modal -->
+    <div id="jump-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-3xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl border border-indigo-200">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-compass text-indigo-600 text-xl"></i>
+                    <h3 class="font-bold text-slate-900 text-lg font-cairo">الانتقال السريع إلى سؤال</h3>
+                </div>
+                <button onclick="closeJumpModal()" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Input for Jump -->
+            <div class="flex items-center gap-2 mb-6">
+                <input type="number" id="jump-input" min="1" max="34" placeholder="أدخل رقم السؤال (1 - 34)" class="w-full bg-slate-100 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button onclick="executeJumpFromInput()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition whitespace-nowrap">
+                    انتقل
+                </button>
+            </div>
+
+            <!-- Questions Grid (1 to 34) -->
+            <p class="text-xs text-slate-500 font-bold mb-3">أو اضغط مباشر على رقم السؤال من الشبكة:</p>
+            <div id="jump-grid" class="grid grid-cols-5 sm:grid-cols-7 gap-2">
+                <!-- 34 buttons injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Finish Modal -->
+    <div id="confirm-finish-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl text-center border border-slate-100">
+            <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 font-cairo mb-2">تأكيد إنهاء الاختبار</h3>
+            <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                هل أنت تأكد من إنهاء الاختبار الآن؟ سيتم احتساب الدرجة النهائية والنسبة بناءً على عدد الأسئلة التي أجبت عليها حتى الآن.
+            </p>
+            <div class="flex items-center justify-center gap-3">
+                <button onclick="finishExamNow()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+                    نعم، أنهِ الاختبار
+                </button>
+                <button onclick="closeConfirmFinishModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-5 py-2.5 rounded-xl text-sm transition">
+                    إلغاء والعودة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Designer Signature Footer -->
+    <footer class="mt-12 text-center text-slate-400 text-xs py-4 border-t border-slate-800/50">
+        <p class="font-semibold text-slate-300">
+            بنك أسئلة محاكاة اختبار الرخصة المهنية للمدربين © 2026
+        </p>
+        <p class="mt-1 text-indigo-300 font-medium">
+            إعداد وتصميم التطبيق: <strong class="text-amber-400 font-bold">محمد رجب</strong> | جوال: <span dir="ltr" class="font-mono text-white">0564826388</span>
+        </p>
+    </footer>
+
+    <!-- JavaScript Engine -->
+    <script>
+        // Full Question Bank (All 34 Questions extracted accurately)
+        const questionsData = [
+            {
+                id: 1,
+                question: "أثناء تصميم دورة تدريبية لمشغلي الآلات في مصنع قرر المدرب تقسيم مهارة التشغيل إلى خطوات صغيرة جداً، ويقوم بتعزيز المتدرب فور إتقانه لكل خطوة قبل الانتقال للتي تليها. أي نظرية تعلم يطبقها المدرب هنا؟",
+                options: [
+                    "النظرية البنائية (التعلم بالاكتشاف)",
+                    "النظرية السلوكية (التعليم المبرمج / التشكيل)",
+                    "نظرية الجشطلت (الاستبصار)",
+                    "النظرية المعرفية (معالجة المعلومات)"
+                ],
+                correct: 1, // B
+                explanation: "تقسيم المهارة إلى خطوات صغيرة بالتعزيز الفوري يمثل مبدأ التعليم المبرمج والتشكيل في المدرسة السلوكية (سكينر)."
+            },
+            {
+                id: 2,
+                question: "في دورة تدريبية، لاحظت أن المشاركين فقدوا اهتمامهم وبدأوا بالانشغال بالهواتف. وفقاً لمبادئ مالكوم نولز (تعليم الكبار)، ما هو السبب الأرجح لهذا السلوك؟",
+                options: [
+                    "قاعة التدريب غير مريحة",
+                    "المدرب لم يوضح لهم لماذا يتعلمون هذا المحتوى وما فائدته المباشرة لهم",
+                    "المدرب لم يستخدم العقاب لضبط القاعة",
+                    "المحتوى العلمي صعب جداً عليهم"
+                ],
+                correct: 1, // B
+                explanation: "الكبار يتساءلون دائماً لماذا نتعلم؟ ويحتاجون لمعرفة الفائدة المباشرة والعملية للمحتوى قبل التفاعل."
+            },
+            {
+                id: 3,
+                question: "أحد أهم الفروق الجوهرية بين تعليم الصغار وتعليم الكبار التي يجب مراعاتها عند التصميم:",
+                options: [
+                    "الكبار يتقبلون التوجيه الإجباري أكثر من الصغار",
+                    "الكبار لديهم ذاكرة آلية أقوى من الصغار",
+                    "الكبار يحتاجون لمعرفة السبب وفائدة التعلم قبل البدء فيه",
+                    "الصغار يعتمدون على التوجيه الذاتي أكثر"
+                ],
+                correct: 2, // C
+                explanation: "من أهم الفروض في الأندراغوجيا أن الكبار موجهون ذاتياً ويحتاجون لمعرفة الغاية والربط بحاجاتهم."
+            },
+            {
+                id: 4,
+                question: "مدرب يعتمد في شرحه على رسم الخرائط الذهنية واستخدام الألوان المتعددة في العرض التقديمي وعرض صور بيانية للإحصاءات. هذا المدرب يستهدف بشكل رئيسي أي نمط من أنماط التعلم؟",
+                options: [
+                    "النمط السمعي",
+                    "النمط الحركي",
+                    "النمط البصري",
+                    "النمط القرائي / الكتابي"
+                ],
+                correct: 2, // C
+                explanation: "الخرائط الذهنية والألوان والصور البيانية تخاطب النمط البصري المفضل لرؤية المعرفة والتصميم."
+            },
+            {
+                id: 5,
+                question: "وفقاً لنموذج مكارثي (4MAT)، إذا طرح أحد المتدربين سؤالاً: \"ماذا لو طبقنا هذه الاستراتيجية في قسم المبيعات بدلاً من التسويق؟\"، فإن هذا المتدرب يقع ضمن النمط:",
+                options: [
+                    "التخيلي (سؤال: لماذا؟)",
+                    "التحليلي (سؤال: ماذا؟)",
+                    "المنطقي (سؤال: كيف؟)",
+                    "الديناميكي (سؤال: ماذا لو؟)"
+                ],
+                correct: 3, // D
+                explanation: "النمط الديناميكي يبحث عن اكتشاف الاحتمالات الجديدة وتطبيق المفاهيم في بيئات مختلفة عبر سؤال \"ماذا لو؟\"."
+            },
+            {
+                id: 6,
+                question: "في نموذج أدي (ADDIE)، في أي مرحلة يتم تحديد الفجوة بين الأداء الحالي والمأمول وتحليل خصائص الجمهور المستهدف؟",
+                options: [
+                    "مرحلة التحليل (Analysis)",
+                    "مرحلة التصميم (Design)",
+                    "مرحلة التطوير (Development)",
+                    "مرحلة التنفيذ (Implementation)"
+                ],
+                correct: 0, // A
+                explanation: "تحديد الفجوات الأدائية وتحليل خصائص الجمهور ودوافعهم هو جوهر الخطوة الأولى \"التحليل\"."
+            },
+            {
+                id: 7,
+                question: "طلب منك صياغة هدف سلوكي لبرنامج خدمة العملاء وفق معايير سمارت (SMART). أي الخيارات التالية يمثل صياغة صحيحة واحترافية؟",
+                options: [
+                    "أن يفهم المتدرب أهمية العناية بالعملاء في المؤسسة",
+                    "سأقوم بشرح خطوات التعامل مع العميل الغاضب في القاعة",
+                    "أن يطبق المتدرب خطوات التهدئة مع عميل غاضب في دقيقتين دون أخطاء",
+                    "إدراك المتدرب لمبادئ خدمة العملاء"
+                ],
+                correct: 2, // C
+                explanation: "هدف ذكي يحدد الجمهور (المتدرب)، السلوك القابل للقياس (يطبق)، الشرط (مع عميل غاضب)، والمعيار (في دقيقتين دون أخطاء)."
+            },
+            {
+                id: 8,
+                question: "يستخدم المدرب نموذج جانييه للأحداث التسعة لتصميم سيناريو الجلسة. عندما يطرح المدرب سؤالاً مثيراً أو قصة غير مكتملة في بداية الجلسة، فهو يحقق أي حدث من الأحداث التسعة؟",
+                options: [
+                    "توفير التوجيه الدراسي",
+                    "جذب الانتباه (Gain Attention)",
+                    "استدعاء التعلم السابق",
+                    "تعزيز الاحتفاظ وانتقال الأثر"
+                ],
+                correct: 1, // B
+                explanation: "طرح الأسئلة المثيرة أو القصص والصور الغامضة هو الحدث الأول لتهيئة أذهان المتدربين وجذب انتباههم."
+            },
+            {
+                id: 9,
+                question: "في تصميم الحقيبة التدريبية، ما الفرق الجوهري بين دليل المدرب وحقيبة المتدرب؟",
+                options: [
+                    "دليل المدرب يحتوي على المادة العلمية فقط وحقيبة المتدرب فارغة",
+                    "دليل المدرب يتضمن خطة إدارة الوقت وإجابات التمارين، بينما حقيبة المتدرب تركز على الملخصات والأنشطة والمادة العلمية",
+                    "لا يوجد فرق بينهما",
+                    "حقيبة المتدرب تحتوي على الشرائح ودليل المدرب يحتوي على الاختبار فقط"
+                ],
+                correct: 1, // B
+                explanation: "دليل المدرب هو دليل إرشادي وإجرائي لإدارة الجلسات والزمن والحلول النموذجية."
+            },
+            {
+                id: 10,
+                question: "أنت تدرب مجموعة من الموظفين على مهارة إطفاء الحرائق وفقاً لمخروط الخبرة لإدجار ديل (Edgar Dale). أي استراتيجية تحقق أعلى نسبة تذكر للمعلومة بنسبة 90%؟",
+                options: [
+                    "عرض فيديو توضيحي",
+                    "توزيع كتيب إرشادي",
+                    "تقديم محاضرة تفصيلية عن كيمياء الحرائق",
+                    "تنفيذ محاكاة حقيقية يقوم فيها المتدرب باستخدام الطفاية لإخماد نار مسيطر عليها"
+                ],
+                correct: 3, // D
+                explanation: "التطبيق الفعلي والمحاكاة المباشرة يقعان في قاعدة مخروط الخبرة ويحققان أعلى نسب التذكر والتمكن."
+            },
+            {
+                id: 11,
+                question: "أثناء جلسة عصف ذهني لحل مشكلة إدارية، قام أحد المتدربين بطرح فكرة غريبة جداً وغير منطقية وبدأ زملاؤه بالضحك وانتقاد الفكرة. بصفتك مدرباً محترفاً، ماذا تفعل؟",
+                options: [
+                    "تتجاهل الموقف وتكمل الجلسة",
+                    "تشاركهم الضحك لتلطيف الجو",
+                    "تتدخل فوراً لمنع النقد وتذكرهم بقاعدة تأجيل الحكم وتشجع الفكرة الغريبة",
+                    "تطلب من صاحب الفكرة سحبها لأنها غير واقعية"
+                ],
+                correct: 2, // C
+                explanation: "القاعدة الأساسية في العصف الذهني هي فصل توليد الأفكار عن تقييمها وتأجيل الحكم للوصول للحلول الإبداعية."
+            },
+            {
+                id: 12,
+                question: "تستخدم استراتيجية جيكسو (Jigsaw) بشكل فعال عندما:",
+                options: [
+                    "يكون المحتوى نظرياً وكثيفاً وتريد من المتدربين تدريس بعضهم البعض",
+                    "تريد تقسيم مهارة يدوية دقيقة لكل فرد على حدة",
+                    "ترغب في توليد أفكار إبداعية لمنتج جديد",
+                    "يكون الوقت ضيقاً وتحتاج لإنهاء المنهج بالمحاضرة"
+                ],
+                correct: 0, // A
+                explanation: "استراتيجية جيكسو تقوم على تقسيم المادة إلى أجزاء وتوزيع المتدربين لمجموعات خبراء ثم العودة لتدريب زملائهم."
+            },
+            {
+                id: 13,
+                question: "لتنمية مهارات التفكير الناقد لدى المتدربين، أي الأساليب التالية هو الأنسب؟",
+                options: [
+                    "المحاضرة المباشرة",
+                    "الأسئلة السقراطية وتحليل الحجج",
+                    "الألعاب الحركية الترفيهية",
+                    "النسخ والتكرار"
+                ],
+                correct: 1, // B
+                explanation: "الحوار السقراطي والتأمل والتحليل ينقل المتدرب لمستويات التفكير العليا والتحقق من افتراضاته."
+            },
+            {
+                id: 14,
+                question: "طلبت إدارة الشركة منك إثبات الجدوى المالية لبرنامجك التدريبي وتريد معرفة النسبة المئوية للأرباح المتحققة مقابل تكلفة التدريب. أي نموذج تقييم سوف تستخدم؟",
+                options: [
+                    "نموذج كيرك باتريك (المستوى الأول)",
+                    "نموذج أدي",
+                    "نموذج جاك فيليبس العائد على الاستثمار (ROI)",
+                    "نموذج سي آي بي بي (CIPP)"
+                ],
+                correct: 2, // C
+                explanation: "نموذج جاك فيليبس هو تطوير لنموذج كيرك باتريك عبر إضافة المستوى الخامس المخصص لقياس العائد المالي والاستثماري."
+            },
+            {
+                id: 15,
+                question: "إذا قمت بإجراء اختبار للمتدربين قبل بدء الدورة لتحديد مستواهم الحالي وبناءً عليه عدلت في خطة التدريب، فهذا يسمى تقويماً:",
+                options: [
+                    "تكويني (بنائي)",
+                    "ختامي (تجمعي)",
+                    "تشخيصي (قبلي)",
+                    "معياري"
+                ],
+                correct: 2, // C
+                explanation: "التقويم التشخيصي المسبق يحدد نقطة الانطلاق وااحتياجات المتدربين الفعلية قبل تنفيذ المحتوى."
+            },
+            {
+                id: 16,
+                question: "وجدت صورة ممتازة على الإنترنت تناسب عرضك التقديمي، لكنها تحمل ترخيص المشاع الإبداعي (CC BY-NC). ماذا يعني ذلك بالنسبة لك كمدرب؟",
+                options: [
+                    "لا يمكنك استخدامها نهائياً",
+                    "يمكنك استخدامها وتعديلها بشرط نسبها لصاحبها وعدم استخدامها في حقيبة تباع تجارياً",
+                    "يمكنك استخدامها وبيعها دون قيود",
+                    "يجب عليك دفع مقابل مالي لصاحبها قبل الاستخدام"
+                ],
+                correct: 1, // B
+                explanation: "الرمز BY يعني نسب العمل للمؤلف، والرمز NC يعني الاستخدام غير التجاري (Non-Commercial)."
+            },
+            {
+                id: 17,
+                question: "أثناء دورة افتراضية (عن بعد)، حدث نقاش حاد في المحادثة (Chat) بين متدربين حول موضوع لا علاقة له بالدورة. التصرف الاحترافي للمدرب هو:",
+                options: [
+                    "المشاركة في النقاش لإبداء الرأي وتخفيف الحدة",
+                    "إغلاق الشات فوراً وطرد المتسببين بالمشكلة",
+                    "التذكير بالميثاق التدريبي بحزم ولطف وإعادة توجيه التركيز لمحتوى الدورة",
+                    "تجاهل المحادثة والاستمرار في الشرح"
+                ],
+                correct: 2, // C
+                explanation: "التذكير بالميثاق التدريبي المعتمد يحفظ النظام بلطف وحزم ويحافظ على بيئة آمنة ومنضبطة."
+            },
+            {
+                id: 18,
+                question: "مدرب يستخدم أسلوب إعادة التوجيه عند تلقي سؤال من المتدرب، كيف يكون تصرفه؟",
+                options: [
+                    "يجيب على السؤال فوراً باختصار",
+                    "يقول للمتدرب لا أعرف الإجابة كنوع من الشجاعة",
+                    "يوجه السؤال لمتدرب آخر أو لمجموعة ليجيبوا عليه",
+                    "يطلب من المتدرب تأجيل السؤال لنهاية الدورة"
+                ],
+                correct: 2, // C
+                explanation: "إعادة التوجيه أسلوب تدريبي يعزز مشاركة المتدربين ويجعل التعلم متبادلاً بدلاً من الاعتماد الكلي على المدرب."
+            },
+            {
+                id: 19,
+                question: "تقدم دورة عن بعد ولاحظت انخفاض المشاركة والتفاعل، ما هي أفضل ممارسة لرفع التفاعل عن بعد؟",
+                options: [
+                    "استخدام أدوات التفاعل الرقمية (المحادثة الكتابية، استطلاعات الرأي، الغرف الجانبية) بشكل دوري",
+                    "زيادة مدة المحاضرة المباشرة",
+                    "تهديد المتدربين بخصم درجات الحضور",
+                    "القراءة من الشرائح التقديمية بسرعة"
+                ],
+                correct: 0, // A
+                explanation: "التدريب الرقمي يحتاج لكسر الروتين واستثارة المتدربين بأدوات تفاعلية متنوعة ومستمرة."
+            },
+            {
+                id: 20,
+                question: "أثناء تقديمك لدورة تدريبية، قام أحد الموظفين بمقاطعتك باستمرار ويتظاهر بأنه يمتلك معلومات أكثر منك ويعقب على كل كلمة. التصرف المهني هو:",
+                options: [
+                    "إحراجه أمام الجميع وإثبات خطأ معلوماته",
+                    "إشباع غروره بذكاء عبر القول: \"واضح أن لديك خبرة كبيرة، سنحتاج لسماع مثال عملي منك في فقرة النقاش القادمة\"",
+                    "طرده من القاعة التدريبية",
+                    "الصمت والسماح له بأخذ إدارة الجلسة"
+                ],
+                correct: 1, // B
+                explanation: "إشباع احتياج المتعلم للاعتراف بمهنية واستثمار خبرته في توقيت محدد يعيد السيطرة للقاعة ويحفظ وقاره."
+            },
+            {
+                id: 21,
+                question: "في ورشة عمل مخصصة لحل المشكلات، كشف الموظفون عن ثغرة أمنية خطيرة في نظام شركتهم. بعد انتهاء الدورة، طلب منك مدرب آخر استخدام هذه القصة كدراسة حالة في دورته. ردك المهني يجب أن يكون:",
+                options: [
+                    "الموافقة بشرط تغيير اسم الشركة",
+                    "الرفض التام لأن ما يدور في القاعة من أسرار هو أمانة لا يجوز نقلها (قاعدة Chatham House)",
+                    "الموافقة لأن هدف التدريب هو نشر المعرفة",
+                    "الموافقة مقابل نسبة من أرباح الدورة الأخرى"
+                ],
+                correct: 1, // B
+                explanation: "أسرار المؤسسات والمعلومات المكتشفة في القاعات حمايتها مسؤولية أخلاقية ومهنية لا مساومة فيها."
+            },
+            {
+                id: 22,
+                question: "مدرب معتمد يقدم دورة في التخطيط المالي بعقد مع مؤسسة. خلال الجلسات يقوم بالترويج لمحافظه الاستثمارية الخاصة ويوزع بطاقات عمله لتقديم استشارات مدفوعة للمتدربين. هذا التصرف يعد مخالفة:",
+                options: [
+                    "انتهاك حقوق الملكية الفكرية",
+                    "التسويق الخفي وتضارب المصالح",
+                    "عدم الأمانة العلمية في النقل",
+                    "تصرفاً طبيعياً لتطوير العمل"
+                ],
+                correct: 1, // B
+                explanation: "استغلال المنصة التدريبية للترويج الشخصي والتجاري المباشر يخالف أخلاقيات المهنة وشروط التعاقد."
+            },
+            {
+                id: 23,
+                question: "لاحظت أثناء الشرح أن أحد المتدربين منشغل تماماً بهاتفه الجوال ولا ينظر إليك. لكي تعيده لجو الدورة دون إحراجه أو توبيخه، الأسلوب الأمثل هو:",
+                options: [
+                    "التوقف عن الكلام والتحديق فيه حتى ينتبه",
+                    "مناداته باسمه بصوت عالٍ وسؤاله عن آخر نقطة",
+                    "استخدام تقنية القرب الجسدي (الاقتراب منه أثناء الحديث)",
+                    "طلب سحب الهواتف من جميع المتدربين"
+                ],
+                correct: 2, // C
+                explanation: "القرب الجسدي إشارة غير لفظية ذكية ولطيفة تنبه المتدرب وتصنع اللباقة دون إحراجه أمام الزملاء."
+            },
+            {
+                id: 24,
+                question: "وفقاً لنموذج كولب (Kolb) للتعلم التجريبي، إذا أردت تصميم جلسة تدريبية تبدأ من التجربة المادية، ما هو التسلسل الصحيح؟",
+                options: [
+                    "محاضرة نظرية -> تمرين عملي -> مناقشة -> إنتاج",
+                    "تمرين عملي -> تفكير وتأمل في النتيجة -> استنتاج القواعد -> التطبيق في موقف جديد",
+                    "عرض فيديو -> قراءة ذاتية -> تمرين جماعي",
+                    "اختبار قصير -> شرح نظري -> تطبيق"
+                ],
+                correct: 1, // B
+                explanation: "دورة كولب تبدأ بالخبرة الحسية المباشرة (التمرين)، يليها الملاحظة المتأملة، المفاهيم المجردة، ثم التجريب النشط."
+            },
+            {
+                id: 25,
+                question: "في اليوم الثالث من دورة تدريبية، لاحظت وجود متدرب مشاغب يكثر من الأحاديث الجانبية ويقاطع الزملاء. ما هي الاستراتيجية الأنسب للتعامل معه؟",
+                options: [
+                    "توجيه نقد مباشر له أمام الجميع",
+                    "تكليفه بمهام قيادية أو توجيه أسئلة صعبة له لتوظيف طاقته وإشغاله بالمحتوى",
+                    "تجاهله تماماً",
+                    "طلب خروجه من القاعة فوراً"
+                ],
+                correct: 1, // B
+                explanation: "تحويل الطاقة السلبية والمشاغبة لمهام إيجابية أو أدوار قيادية يمتص السلوك المشتت ويضمن الانضباط."
+            },
+            {
+                id: 26,
+                question: "أي الخيارات التالية يمثل تغذية راجعة بناءة لمتدرب أخطأ في تمرين؟",
+                options: [
+                    "أنت دائماً تهمل التعليمات",
+                    "أداء فاشل ويجب إعادة التمرين",
+                    "أغفلت الخطوة الثالثة مما عطل الجهاز، راجع القائمة في المرة القادمة",
+                    "ركز قليلاً ولا تتسرع"
+                ],
+                correct: 2, // C
+                explanation: "التغذية البناءة تركز على السلوك المنهجي المحدد والنتيجة، وتقدم خطوات واضحة ومحددة للتعديل."
+            },
+            {
+                id: 27,
+                question: "عند تقييم برنامج تدريبي وفق نموذج CIPP بتقييم مدى توفر الموارد وكفاءة المدربين وجودة القاعات قبل البدء، فإنك في مرحلة تقييم:",
+                options: [
+                    "السياق (Context)",
+                    "المدخلات (Input)",
+                    "العمليات (Process)",
+                    "المخرجات / المنتج (Product)"
+                ],
+                correct: 1, // B
+                explanation: "تقييم الموارد البشرية واللوجستية والمالية المتاحة قبل الانطلاق يعبر عن خطوة تقييم \"المدخلات\"."
+            },
+            {
+                id: 28,
+                question: "في اليوم الأول من دورة تقنية تعطل النظام الإلكتروني (LMS) الذي تعتمد عليه الدورة بالكامل. التصرف الذي يعكس كفاءة إدارة الأزمات لدى المدرب هو:",
+                options: [
+                    "إلغاء الدورة وتأجيلها ليوم آخر",
+                    "الانتقال فوراً للخطة البديلة (ب) واستخدام مواد غير متصلة بالإنترنت (Offline) أو أنشطة ورقية بديلة أُعدت مسبقاً",
+                    "الشكوى والدخول في معاتبة مع الدعم الفني في القاعة",
+                    "ترك القاعة حتى يُصلح النظام"
+                ],
+                correct: 1, // B
+                explanation: "إدارة الأزمات في التدريب تقتضي وجود خطة طوارئ بديلة جاهزة تضمن استمرار التفاعل دون إهدار الوقت."
+            },
+            {
+                id: 29,
+                question: "اكتشفت أثناء الشرح أنك تميل إلى توجيه الأسئلة والمشاركة للمتدربين الذكور أكثر من الإناث (أو العكس). ما هو الإجراء المهني لتصحيح هذا التحيز الضمني؟",
+                options: [
+                    "تبرير ذلك بأنهم الأكثر مبادرة للمشاركة",
+                    "استخدام أدوات اختيار عشوائية أو قائمة مرجعية لضمان توزيع الفرص بعدالة ومراقبة ذاتية مستمرة",
+                    "التوقف عن توجيه الأسئلة للجميع",
+                    "طلب الجرأة من الفئة الأخرى"
+                ],
+                correct: 1, // B
+                explanation: "تطبيق العدالة والإنساف يتطلب الاستعانة بأدوات تقنية وعشوائية تمنع التحيزات غير المقصودة."
+            },
+            {
+                id: 30,
+                question: "أثناء تحليل نتائج التقييم في نموذج كيرك باتريك، وجدت أن المستوى الأول (ردة الفعل) 95% من المتدربين سعداء بالدورة، لكن في المستوى الثاني (التعلم) نتائج الاختبار البعدي أظهرت عدم وجود تحسن يذكر. يسمى هذا الوضع بـ:",
+                options: [
+                    "متلازمة التدريب الفعال",
+                    "متلازمة المدرب المهرج (استمتاع دون فائدة تعليمية)",
+                    "التحيز المعرفي",
+                    "العائد المرتفع على الاستثمار"
+                ],
+                correct: 1, // B
+                explanation: "تحدث هذه المتلازمة عندما يركز المدرب على الفكاهة والترفيه وإرضاء الشغف دون بناء حصيلة معرفية أو مهارية حقيقية."
+            },
+            {
+                id: 31,
+                question: "طلب منك تقديم حقيبة مملوكة لمدرب آخر ونسخها باسمك لعدم توفر ميزانية. التصرف الأخلاقي والمهني هو:",
+                options: [
+                    "الموافقة مع تغيير عنوان الحقيبة فقط",
+                    "الرفض القاطع واقتراح تصميم جديد أو التواصل مع صاحب الحقيبة وشراء الأصل",
+                    "الموافقة لمرة واحدة فقط",
+                    "استخدامها دون وضع أي اسم عليها"
+                ],
+                correct: 1, // B
+                explanation: "احترام حقوق الملكية الفكرية أصل مهني وأخلاقي ثابت لا تجوز مخالفته لأي مبررات مالية أو إدارية."
+            },
+            {
+                id: 32,
+                question: "طلب منك المدير قياس المستوى الثالث في نموذج كيرك باتريك (السلوك) لدورة القيادة، واقترح عليك توزيع استبيان في آخر يوم يسألهم \"هل ستطبقون ما تعلمتموه؟\". ردك المهني هو:",
+                options: [
+                    "الموافقة الفورية لأنها تقيس النوايا",
+                    "الرفض وتوضيح أن المستوى الثالث (السلوك) لا يُقاس فورياً بل بعد مرور 3 إلى 6 أشهر في بيئة العمل أو عبر تقييم 360 درجة",
+                    "تعديل الاستبانة لسؤالهم عما تعلموه",
+                    "الاكتفاء بمراقبتهم في الاستراحة"
+                ],
+                correct: 1, // B
+                explanation: "تعديل السلوك يتطلب زمناً لتطبيقه في الواقع الوظيفي المباشر، والاستبيان الفوري يمثل مجرد نية لا سلوكاً ثابتاً."
+            },
+            {
+                id: 33,
+                question: "أثناء قياس أثر التدريب بعد 3 أشهر (المستوى الثالث - السلوك)، وجدت أن المتدربين يطبقون المهارات في بيئة العمل بنجاح، لكن مؤشرات الأداء المؤسسي (المستوى الرابع - النتائج) لم تتحسن. الاستنتاج التحليلي الأكثر دقة هو:",
+                options: [
+                    "المدرب فشل في تقديم البرنامج",
+                    "الخلل يكمن في مرحلة تحديد الاحتياج (TNA) حيث تم التدريب على المهارة الخاطئة التي لا تعالج مشكلة العمل",
+                    "المتدربون يخدعون الإدارة",
+                    "الاختبارات غير دقيقة"
+                ],
+                correct: 1, // B
+                explanation: "تطبيق المهارات بنجاح دون أثر مؤسسي يعني أن التحليل الأولي للاحتياج وجّه التدريب لمهارات غير مرتبطة بالفجوة الحقيقية."
+            },
+            {
+                id: 34,
+                question: "ارتفعت مبيعات الشركة بنسبة 20% بعد دورتك التدريبية لموظفي المبيعات، وتزامن ذلك مع إطلاق حملة تسويقية ضخمة في نفس الفترة. عند إعداد تقرير المستوى الرابع (النتائج)، ما هي الطريقة الأكثر احترافية لعزل أثر التدريب؟",
+                options: [
+                    "نسبة الـ 20% كاملة للتدريب",
+                    "تجاهل الحملة التسويقية والتركيز على درجة الاختبار",
+                    "استخدام مجموعة ضابطة (Control Group) لم تتدرب أو استخدام تقديرات الخبراء لتحديد نسبة مساهمة التدريب مقابل التسويق",
+                    "إلغاء التقرير لعدم وضوح السبب"
+                ],
+                correct: 2, // C
+                explanation: "عزل المتغيرات المؤثرة يستدعي المجموعات الضابطة للمقارنة أو تقييمات الخبراء لمنح التقرير مصداقية علمية."
+            }
+        ];
+
+        // App State
+        let currentIndex = 0;
+        let userAnswers = {}; // { qIndex: selectedOptionIndex }
+        let flaggedQuestions = new Set();
+        let secondsElapsed = 0;
+        let timerInterval = null;
+        let examFinished = false;
+
+        // Choice Prefix letters
+        const optionPrefixes = ['أ', 'ب', 'ج', 'د'];
+
+        // Initialize App
+        window.onload = function() {
+            startTimer();
+            renderQuestion();
+            updateControlBar();
+            buildJumpGrid();
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (examFinished) return;
+                if (e.key === 'ArrowLeft') {
+                    nextQuestion();
+                } else if (e.key === 'ArrowRight') {
+                    prevQuestion();
+                }
+            });
+        };
+
+        // Timer Functionality
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+                document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // Render Current Question
+        function renderQuestion() {
+            const q = questionsData[currentIndex];
+            
+            // Header Info
+            document.getElementById('current-q-num').innerText = currentIndex + 1;
+            document.getElementById('q-header-number').innerText = currentIndex + 1;
+            
+            // Progress Bar
+            const progressPct = ((currentIndex + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+
+            // Status Badge
+            const statusBadge = document.getElementById('q-status-badge');
+            if (userAnswers.hasOwnProperty(currentIndex)) {
+                statusBadge.innerText = 'تمت الإجابة';
+                statusBadge.className = 'bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded-lg border border-emerald-300';
+            } else {
+                statusBadge.innerText = 'غير مجاب';
+                statusBadge.className = 'bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded-lg';
+            }
+
+            // Flag state
+            updateFlagBtnState();
+
+            // Question Text
+            document.getElementById('question-text').innerText = `${q.id}. ${q.question}`;
+
+            // Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const isAnswered = userAnswers.hasOwnProperty(currentIndex);
+            const userChoice = userAnswers[currentIndex];
+
+            q.options.forEach((optText, optIndex) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-right p-4 rounded-2xl border-2 font-bold text-sm sm:text-base flex items-center justify-between transition duration-200 group `;
+                
+                let iconHtml = `<span class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shrink-0 transition `;
+
+                if (!isAnswered) {
+                    btn.className += `border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 bg-white text-slate-800 shadow-sm`;
+                    iconHtml += `bg-slate-100 text-slate-600 group-hover:bg-indigo-600 group-hover:text-white">${optionPrefixes[optIndex]}</span>`;
+                } else {
+                    // Feedback styling
+                    if (optIndex === q.correct) {
+                        // Correct option
+                        btn.className += `border-emerald-500 bg-emerald-50 text-emerald-950 shadow-md`;
+                        iconHtml += `bg-emerald-600 text-white"><i class="fa-solid fa-check"></i></span>`;
+                    } else if (optIndex === userChoice && userChoice !== q.correct) {
+                        // User chose wrong option
+                        btn.className += `border-rose-500 bg-rose-50 text-rose-950 shadow-md`;
+                        iconHtml += `bg-rose-600 text-white"><i class="fa-solid fa-xmark"></i></span>`;
+                    } else {
+                        // Other unselected options
+                        btn.className += `border-slate-100 bg-slate-50/80 text-slate-400 opacity-60`;
+                        iconHtml += `bg-slate-200 text-slate-500">${optionPrefixes[optIndex]}</span>`;
+                    }
+                }
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        ${iconHtml}
+                        <span class="leading-snug">${optText}</span>
+                    </div>
+                `;
+
+                btn.onclick = () => selectOption(optIndex);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Explanation Box
+            const expBox = document.getElementById('explanation-box');
+            if (isAnswered) {
+                document.getElementById('explanation-text').innerText = q.explanation;
+                expBox.classList.remove('hidden');
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Navigation Buttons State
+            document.getElementById('prev-btn').disabled = (currentIndex === 0);
+            
+            const nextBtn = document.getElementById('next-btn');
+            if (currentIndex === questionsData.length - 1) {
+                nextBtn.innerHTML = `<span>إنهاء الاختبار</span> <i class="fa-solid fa-flag-checkered"></i>`;
+                nextBtn.className = "bg-rose-600 hover:bg-rose-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-rose-600/30 text-sm";
+            } else {
+                nextBtn.innerHTML = `<span>التالي</span> <i class="fa-solid fa-arrow-left"></i>`;
+                nextBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-indigo-600/30 text-sm";
+            }
+        }
+
+        // Handle Option Click
+        function selectOption(optionIdx) {
+            userAnswers[currentIndex] = optionIdx;
+            renderQuestion();
+            updateControlBar();
+        }
+
+        // Navigation
+        function nextQuestion() {
+            if (currentIndex < questionsData.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                confirmFinishExam();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        // Flag Question
+        function toggleFlagCurrentQuestion() {
+            if (flaggedQuestions.has(currentIndex)) {
+                flaggedQuestions.delete(currentIndex);
+            } else {
+                flaggedQuestions.add(currentIndex);
+            }
+            updateFlagBtnState();
+        }
+
+        function updateFlagBtnState() {
+            const flagIcon = document.getElementById('flag-icon');
+            const flagText = document.getElementById('flag-text');
+            const flagBtn = document.getElementById('flag-btn');
+
+            if (flaggedQuestions.has(currentIndex)) {
+                flagIcon.className = "fa-solid fa-bookmark text-amber-500";
+                flagText.innerText = "مميز للرجوع";
+                flagBtn.className = "text-amber-600 bg-amber-50 font-bold text-sm flex items-center gap-1 transition px-2.5 py-1 rounded-lg border border-amber-200";
+            } else {
+                flagIcon.className = "fa-regular fa-bookmark";
+                flagText.innerText = "تمييز السؤال";
+                flagBtn.className = "text-slate-400 hover:text-amber-500 text-sm font-semibold flex items-center gap-1 transition px-2 py-1 rounded-lg hover:bg-slate-100";
+            }
+        }
+
+        // Control Bar update
+        function updateControlBar() {
+            // Updated automatically inside renderQuestion
+        }
+
+        // Jump Modal Logic
+        function openJumpModal() {
+            buildJumpGrid();
+            document.getElementById('jump-modal').classList.remove('hidden');
+        }
+
+        function closeJumpModal() {
+            document.getElementById('jump-modal').classList.add('hidden');
+        }
+
+        function buildJumpGrid() {
+            const grid = document.getElementById('jump-grid');
+            grid.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `h-10 rounded-xl font-bold text-xs flex items-center justify-center border transition relative `;
+                
+                const isCurrent = (idx === currentIndex);
+                const isAnswered = userAnswers.hasOwnProperty(idx);
+                const isFlagged = flaggedQuestions.has(idx);
+
+                if (isCurrent) {
+                    btn.className += `bg-indigo-600 text-white border-indigo-700 ring-2 ring-indigo-400 ring-offset-1 font-black`;
+                } else if (isAnswered) {
+                    const isCorrect = (userAnswers[idx] === q.correct);
+                    if (isCorrect) {
+                        btn.className += `bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200`;
+                    } else {
+                        btn.className += `bg-rose-100 text-rose-800 border-rose-300 hover:bg-rose-200`;
+                    }
+                } else {
+                    btn.className += `bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200`;
+                }
+
+                btn.innerText = idx + 1;
+
+                if (isFlagged) {
+                    const dot = document.createElement('span');
+                    dot.className = "absolute -top-1 -right-1 w-3 h-3 bg-amber-500 rounded-full border-2 border-white";
+                    btn.appendChild(dot);
+                }
+
+                btn.onclick = () => {
+                    currentIndex = idx;
+                    renderQuestion();
+                    closeJumpModal();
+                };
+
+                grid.appendChild(btn);
+            });
+        }
+
+        function executeJumpFromInput() {
+            const val = parseInt(document.getElementById('jump-input').value);
+            if (val >= 1 && val <= 34) {
+                currentIndex = val - 1;
+                renderQuestion();
+                closeJumpModal();
+                document.getElementById('jump-input').value = '';
+            } else {
+                alert('رجاءً أدخل رقم سؤال صحيح بين 1 و 34');
+            }
+        }
+
+        // Finish Exam Confirmation
+        function confirmFinishExam() {
+            document.getElementById('confirm-finish-modal').classList.remove('hidden');
+        }
+
+        function closeConfirmFinishModal() {
+            document.getElementById('confirm-finish-modal').classList.add('hidden');
+        }
+
+        // Calculate and Show Results
+        function finishExamNow() {
+            closeConfirmFinishModal();
+            clearInterval(timerInterval);
+            examFinished = true;
+
+            let correctCount = 0;
+            let wrongCount = 0;
+            const totalQuestions = questionsData.length;
+            const answeredCount = Object.keys(userAnswers).length;
+
+            questionsData.forEach((q, idx) => {
+                if (userAnswers.hasOwnProperty(idx)) {
+                    if (userAnswers[idx] === q.correct) {
+                        correctCount++;
+                    } else {
+                        wrongCount++;
+                    }
+                }
+            });
+
+            const unansweredCount = totalQuestions - answeredCount;
+
+            // Score Calculations
+            const attemptedPct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+            const totalPct = Math.round((correctCount / totalQuestions) * 100);
+
+            // Populate Results UI
+            document.getElementById('res-score-attempted-pct').innerText = `${attemptedPct}%`;
+            document.getElementById('res-score-total-pct').innerText = `${totalPct}%`;
+            document.getElementById('res-correct-count').innerText = correctCount;
+            document.getElementById('res-wrong-count').innerText = wrongCount;
+            document.getElementById('res-unanswered-count').innerText = unansweredCount;
+
+            // Performance Badge
+            const badge = document.getElementById('res-score-badge');
+            if (attemptedPct >= 90) {
+                badge.innerText = 'ممتاز جداً 🌟';
+                badge.className = 'text-[11px] bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded-full inline-block font-bold';
+            } else if (attemptedPct >= 75) {
+                badge.innerText = 'جيد جداً 👍';
+                badge.className = 'text-[11px] bg-blue-800 text-blue-200 px-2 py-0.5 rounded-full inline-block font-bold';
+            } else if (attemptedPct >= 60) {
+                badge.innerText = 'جيد / مقبول ⚠️';
+                badge.className = 'text-[11px] bg-amber-800 text-amber-200 px-2 py-0.5 rounded-full inline-block font-bold';
+            } else {
+                badge.innerText = 'يحتاج إلى مراجعة 📖';
+                badge.className = 'text-[11px] bg-rose-800 text-rose-200 px-2 py-0.5 rounded-full inline-block font-bold';
+            }
+
+            // Time Taken
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('res-time-taken').innerText = `${mins}:${secs}`;
+
+            // Hide Quiz Container, Show Results
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('results-container').classList.remove('hidden');
+
+            // Render Full Review List
+            renderReviewList();
+        }
+
+        // Render Question-by-Question Review List
+        function renderReviewList() {
+            const container = document.getElementById('review-list-container');
+            container.innerHTML = '';
+
+            questionsData.forEach((q, idx) => {
+                const isAnswered = userAnswers.hasOwnProperty(idx);
+                const userChoice = userAnswers[idx];
+                const isCorrect = isAnswered && (userChoice === q.correct);
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-2xl border-2 transition ${
+                    !isAnswered 
+                        ? 'bg-slate-50 border-slate-200' 
+                        : isCorrect 
+                            ? 'bg-emerald-50/60 border-emerald-300' 
+                            : 'bg-rose-50/60 border-rose-300'
+                }`;
+
+                let statusTextHtml = '';
+                if (!isAnswered) {
+                    statusTextHtml = `<span class="bg-slate-200 text-slate-700 text-xs px-2.5 py-1 rounded-md font-bold">لم يتم الإجابة</span>`;
+                } else if (isCorrect) {
+                    statusTextHtml = `<span class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-md font-bold"><i class="fa-solid fa-check ml-1"></i> إجابة صحيحة</span>`;
+                } else {
+                    statusTextHtml = `<span class="bg-rose-600 text-white text-xs px-2.5 py-1 rounded-md font-bold"><i class="fa-solid fa-xmark ml-1"></i> إجابة خاطئة</span>`;
+                }
+
+                let optionsHtml = '<div class="space-y-2 mt-3">';
+                q.options.forEach((opt, oIdx) => {
+                    let optStyle = "bg-white border-slate-200 text-slate-700";
+                    let prefixIcon = optionPrefixes[oIdx];
+
+                    if (oIdx === q.correct) {
+                        optStyle = "bg-emerald-100 border-emerald-400 text-emerald-900 font-bold";
+                        prefixIcon = "✓ " + optionPrefixes[oIdx];
+                    } else if (oIdx === userChoice && !isCorrect) {
+                        optStyle = "bg-rose-100 border-rose-400 text-rose-900 font-bold";
+                        prefixIcon = "✗ " + optionPrefixes[oIdx];
+                    }
+
+                    optionsHtml += `
+                        <div class="p-3 rounded-xl border text-sm flex items-center gap-2 ${optStyle}">
+                            <span class="w-6 h-6 rounded-md bg-white/80 shrink-0 flex items-center justify-center text-xs font-black">${prefixIcon}</span>
+                            <span>${opt}</span>
+                        </div>
+                    `;
+                });
+                optionsHtml += '</div>';
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-200/60 pb-3 mb-2">
+                        <span class="font-extrabold text-slate-900 text-sm font-cairo">سؤال ${q.id} من 34</span>
+                        ${statusTextHtml}
+                    </div>
+                    <p class="font-bold text-slate-900 text-base leading-relaxed my-2">${q.question}</p>
+                    ${optionsHtml}
+                    <div class="mt-4 bg-white/90 p-3.5 rounded-xl border border-emerald-200 text-emerald-900 text-sm">
+                        <span class="font-extrabold text-emerald-800 block mb-1">💡 الشرح والتوضيح:</span>
+                        <p class="leading-relaxed">${q.explanation}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Toggle Review Display
+        function toggleReviewSection() {
+            const section = document.getElementById('review-section');
+            const btnText = document.getElementById('review-btn-text');
+
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                btnText.innerText = 'إخفاء كشف الأسئلة';
+            } else {
+                section.classList.add('hidden');
+                btnText.innerText = 'مراجعة كشف الأسئلة والشروحات';
+            }
+        }
+
+        // Restart Full Exam
+        function restartFullExam() {
+            if (confirm('هل تريد إعادة الاختبار بالكامل وتصفير النتائج؟')) {
+                userAnswers = {};
+                flaggedQuestions.clear();
+                currentIndex = 0;
+                secondsElapsed = 0;
+                examFinished = false;
+
+                document.getElementById('results-container').classList.add('hidden');
+                document.getElementById('quiz-container').classList.remove('hidden');
+
+                startTimer();
+                renderQuestion();
+            }
+        }
+    </script>
+</body>
+</html>
+
