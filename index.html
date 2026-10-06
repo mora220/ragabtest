@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقياس موهبة - المستوى الثاني | منصة التدريب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a; /* أزرق داكن احترافي */
+            --primary-light: #3b82f6;
+            --accent: #d97706; /* برتقالي للتمييز */
+            --success: #15803d;
+            --danger: #b91c1c;
+            --bg-light: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* تنسيق الهيدر */
+        header {
+            background: linear-gradient(135deg, var(--primary), #172554);
+            color: white;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .brand-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .author-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 2.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* شاشة الاختيار */
+        .selection-panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-btn::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary-light);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card-btn:hover::before { transform: scaleY(1); }
+        .card-btn:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+
+        .card-btn h3 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .card-btn p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* شاشة الاختبار */
+        .exam-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .exam-header {
+            background: #f8fafc;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
+        }
+
+        .timer-badge {
+            background: #e0f2fe;
+            color: #0284c7;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #bae6fd;
+        }
+
+        .exam-body { padding: 2.5rem 2rem; }
+
+        .passage-box {
+            background: #f0fdf4;
+            border-right: 4px solid var(--success);
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            border-radius: 8px;
+            color: #166534;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* تنسيق الكسور الرياضية */
+        .math-frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            font-weight: bold;
+            margin: 0 4px;
+            font-size: 0.9em;
+        }
+        .math-frac .num {
+            border-bottom: 2px solid currentColor;
+            padding: 0 4px;
+            line-height: 1.2;
+        }
+        .math-frac .den {
+            padding: 0 4px;
+            line-height: 1.2;
+        }
+
+        /* تنسيق الرسومات التوضيحية */
+        .q-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 10px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .option-item:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .option-item.selected {
+            background: #eff6ff;
+            border-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .opt-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e2e8f0;
+            margin-left: 15px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+
+        .option-item.selected .opt-letter {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .exam-footer {
+            padding: 1.5rem 2rem;
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background: #172554; }
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: #166534; }
+
+        /* شاشة النتائج */
+        .result-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin: 2rem auto;
+            border: 6px solid var(--primary-light);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .eval-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .eval-excellent-plus { background: #15803d; } /* ممتاز جداً */
+        .eval-excellent { background: #0ea5e9; }      /* ممتاز */
+        .eval-vgood { background: #eab308; }          /* جيد جداً */
+        .eval-good { background: #f97316; }           /* جيد */
+        .eval-acceptable { background: #64748b; }     /* مقبول */
+        .eval-poor { background: #ef4444; }           /* غير مرضي */
+
+        .review-list {
+            margin-top: 3rem;
+            text-align: right;
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .review-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+        .review-item:last-child { border-bottom: none; }
+
+        .review-item.correct {
+            border-right: 5px solid var(--success);
+            padding-right: 1.2rem;
+        }
+
+        .review-item.incorrect {
+            border-right: 5px solid var(--danger);
+            padding-right: 1.2rem;
+        }
+
+        .correct-ans { color: var(--success); font-weight: 700; }
+        .wrong-ans { color: var(--danger); font-weight: 700; }
+        .explanation {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand-title">منصة تقييم موهبة (المستوى الثاني)</div>
+    <div class="author-tag">إعداد: أ. محمد رجب</div>
+</header>
+
+<div class="container">
+    <!-- شاشة اختيار الأقسام -->
+    <div id="selectionPanel" class="selection-panel">
+        <h2 class="section-title">التدريب على اختبارات موهبة</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">اختر المهارة التي ترغب بالتدرب عليها وفقاً لمعايير اختبار القدرات العقلية المتعددة.</p>
+        
+        <div class="category-grid">
+            <div class="card-btn" onclick="startExam('all')">
+                <h3>اختبار محاكي شامل</h3>
+                <p>مجموعة شاملة ومتنوعة من كافة أقسام المقياس لتقييم مستواك العام.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('verbal')">
+                <h3>الاستدلال اللغوي وفهم المقروء</h3>
+                <p>إدراك العلاقات اللغوية، التناظر اللفظي، واستيعاب النصوص والقصص.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('math')">
+                <h3>الاستدلال الرياضي والمكاني</h3>
+                <p>العمليات الحسابية، التسلسل المنطقي للأرقام، وإدراك الأشكال الهندسية وثنائية الأبعاد.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('science')">
+                <h3>الاستدلال العلمي والميكانيكي</h3>
+                <p>التفكير المنطقي المبني على الدليل، البكرات، التروس، وقوانين الفيزياء والطبيعة.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('flexibility')">
+                <h3>المرونة العقلية</h3>
+                <p>التفكير خارج الصندوق، حل المشكلات المعقدة، والقدرة على الاستنتاج.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة الاختبار -->
+    <div id="examPanel" class="exam-panel">
+        <div class="exam-header">
+            <div>
+                <strong id="sectionDisplay" style="color: var(--primary);">القسم</strong>
+                <span style="margin: 0 10px; color: var(--border);">|</span>
+                السؤال <span id="qCurrent" style="font-weight: 800;">1</span> من <span id="qTotal">10</span>
+            </div>
+            <div class="timer-badge">
+                ⏱️ <span id="timer">00:00</span>
+            </div>
+        </div>
+
+        <div class="exam-body">
+            <div id="passageBox" class="passage-box" style="display:none;"></div>
+            <div id="imageBox" class="q-image" style="display:none;"></div>
+            <div class="question-text" id="questionText">نص السؤال...</div>
+            <ul class="options-list" id="optionsContainer"></ul>
+        </div>
+
+        <div class="exam-footer">
+            <button class="btn" id="nextBtn" onclick="navigateQuestion(1)">السؤال التالي</button>
+            <button class="btn btn-success" id="submitBtn" style="display:none;" onclick="finishExam()">إنهاء الاختبار</button>
+            <button class="btn" style="background: #cbd5e1; color: #0f172a;" id="prevBtn" onclick="navigateQuestion(-1)">السابق</button>
+        </div>
+    </div>
+
+    <!-- شاشة النتيجة -->
+    <div id="resultPanel" class="result-panel">
+        <h2 class="section-title" style="text-align: center;">تقرير الأداء والتقييم</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">مقياس موهبة للقدرات العقلية المتعددة - الصف السادس</p>
+        
+        <div class="score-circle" id="scorePercent">0%</div>
+        
+        <div id="evaluationBadge" class="eval-badge">ممتاز</div>
+        
+        <p id="scoreSummary" style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;"></p>
+        <p id="timeSummary" style="font-size: 1.1rem; color: var(--text-muted);"></p>
+        
+        <div class="review-list">
+            <h3 style="margin-bottom: 1.5rem; color: var(--primary); border-bottom: 2px solid var(--border); padding-bottom: 10px;">المراجعة التفصيلية والتصحيح:</h3>
+            <div id="reviewContainer"></div>
+        </div>
+
+        <button class="btn" style="margin-top: 3rem; font-size: 1.2rem; padding: 1rem 3rem;" onclick="resetToHome()">العودة للقائمة الرئيسية</button>
+    </div>
+</div>
+
+<script>
+    // قاعدة بيانات الأسئلة المستخلصة من كتاب بالبيد (الصف السادس)
+    const questionBank = [
+        // --- الاستدلال اللغوي وفهم المقروء ---
+        {
+            category: 'verbal', domain: 'الاستدلال اللغوي',
+            question: "إنسان : تنفّس : حياة\nوردة : عطش : ؟",
+            options: ["قطف", "لون", "اقتلاع", "ذبول"],
+            answer: 3,
+            explanation: "التنفس يعطي حياة للإنسان، والعطش يعطي ذبولاً للوردة."
+        },
+        {
+            category: 'verbal', domain: 'الاستدلال اللغوي',
+            question: "حدد الكلمة المختلفة فيما يأتي:",
+            options: ["الضحى", "الغسق", "الشفق", "الفجر"],
+            answer: 1,
+            explanation: "جميع الكلمات تشير إلى أوقات بداية أو نهاية اليوم أو مرتبطة بالشمس، و(الغسق) هو ظلمة الليل."
+        },
+        {
+            category: 'verbal', domain: 'الاستدلال اللغوي',
+            question: "العلاقة بين الخشب والباب مثل العلاقة بين:",
+            options: ["الحلوى والسكر", "المفتاح والمقبض", "الطين والطوب", "الثوب والقماش"],
+            answer: 2,
+            explanation: "الخشب يُصنع منه الباب، والطين يُصنع منه الطوب (المادة الخام والمُنتج)."
+        },
+        {
+            category: 'verbal', domain: 'فهم المقروء',
+            passage: "كانت النملة الصغيرة تصعد جدار البيت، وعندما بلغت زاويته شاهدت بيت عنكبوت. اقتربت منه تتفحصه، فرأت نسجه دقيقاً وخيوطه ضعيفة. سألت النملة: ألا تخرجين لتعملي؟ فردت العنكبوت: أنا أكسب رزقي وأنا جالسة هنا. وبعد قليل وقعت ذبابة في الفخ. فقالت العنكبوت: هل أعجبك صيدي؟ قالت النملة: لا، لأنه مبني على الحيلة، أنا أكسب قوتي بالجد والعمل.",
+            question: "ما هي العبرة التي جاءت على لسان النملة في النص؟",
+            options: [
+                "أن العنكبوت يكسب عمله بالجد.",
+                "أن العمل يجب أن يكسب بالحيلة والخداع.",
+                "أن العمل يجب أن يكسب بالجد والعمل.",
+                "أن الذبابة ضعيفة لذلك سقطت بشباك العنكبوت."
+            ],
+            answer: 2,
+            explanation: "ورد في النص صراحة على لسان النملة أنها تكسب قوتها بالجد والعمل وترفض الحيلة."
+        },
+
+        // --- الاستدلال الرياضي والمكاني ---
+        {
+            category: 'math', domain: 'الاستدلال الرياضي',
+            question: "غرفة مستطيلة طولها 6 متر وعرضها 4 متر، يُراد شراء بلاط لتغطية الأرضية. كم عدد البلاطات اللازم شراؤها إذا كانت مساحة كل بلاطة <span class='math-frac'><span class='num'>1</span><span class='den'>2</span></span> متر مربع؟",
+            options: ["12", "24", "36", "48"],
+            answer: 3,
+            explanation: "مساحة الغرفة = 6 × 4 = 24 متراً مربعاً. بما أن البلاطة مساحتها نصف متر مربع، فنحن نحتاج بلاطتين لكل متر مربع. إذن: 24 × 2 = 48 بلاطة."
+        },
+        {
+            category: 'math', domain: 'الاستدلال الرياضي',
+            question: "ذهبت إلى المزرعة فرأيت مجموعة من الخرفان، فعددت أرجلها وعيونها فوجدت أن لها سوياً 28 رجلاً و 14 عيناً، فما عدد الخرفان التي رأيتها؟",
+            options: ["7", "14", "21", "42"],
+            answer: 0,
+            explanation: "كل خروف يمتلك عينين و 4 أرجل. 14 عيناً ÷ 2 = 7 خرفان. وللتأكد: 7 خرفان × 4 أرجل = 28 رجلاً."
+        },
+        {
+            category: 'math', domain: 'الاستدلال الرياضي',
+            question: "اقسم الرقم 200 على <span class='math-frac'><span class='num'>1</span><span class='den'>2</span></span> وأضف للناتج 20، يكون الناتج النهائي:",
+            options: ["120", "220", "320", "420"],
+            answer: 3,
+            explanation: "القسمة على نصف تعني الضرب في 2. إذن (200 × 2) = 400. بإضافة 20 يصبح الناتج 420."
+        },
+        {
+            category: 'math', domain: 'الاستدلال الرياضي',
+            question: "يمتلك سعيد 600 ريال في البنك، صرف من المبلغ 360 ريالاً على الملابس، و 100 ريال على الغداء، وكتب شيكاً بمبلغ 180 ريالاً لشراء ساعة. ما هو الموقف المالي لسعيد؟",
+            options: [
+                "توفر معه 40 ريالاً في المصرف.",
+                "يحتاج 40 ريالاً لسد العجز في حسابه.",
+                "أصبح رصيده صفراً.",
+                "لا شيء مما ذكر."
+            ],
+            answer: 1,
+            explanation: "مجموع ما تم صرفه: 360 + 100 + 180 = 640 ريالاً. رصيده 600 ريال فقط، لذا لديه عجز مقداره 40 ريالاً (يحتاج 40 ريالاً)."
+        },
+
+        // --- الاستدلال العلمي والميكانيكي ---
+        {
+            category: 'science', domain: 'الاستدلال الميكانيكي',
+            question: "بكرة (1) نصف قطرها 3 سم مرتبطة عبر حزام ببكرة (2) نصف قطرها 1 سم. إذا تحركت البكرة الكبرى (1) دورة واحدة باتجاه عقارب الساعة، فإن البكرة الصغرى (2) ستدور:",
+            options: [
+                "دورة واحدة مع عقارب الساعة.",
+                "دورتين عكس عقارب الساعة.",
+                "3 دورات مع عقارب الساعة.",
+                "3 دورات عكس عقارب الساعة."
+            ],
+            answer: 2,
+            explanation: "بما أن نصف قطر البكرة (1) أكبر بثلاث مرات من (2)، فإن البكرة (2) ستدور 3 مرات أسرع (3 دورات). وبما أن الحزام غير متقاطع، فستدور في نفس الاتجاه (مع عقارب الساعة)."
+        },
+        {
+            category: 'science', domain: 'الاستدلال العلمي',
+            question: "تنحدر كرة حديدية وكرة خشبية (متساويتان في الحجم) من أعلى منحدر أملس عديم الاحتكاك في نفس الوقت لتصطدما بكرة بلاستيكية ساكنة في المنتصف. ماذا يحدث؟",
+            options: [
+                "تندفع الكرة البلاستيكية باتجاه الكرة الخشبية.",
+                "تندفع الكرة البلاستيكية باتجاه الكرة الحديدية.",
+                "تدور الكرة البلاستيكية حول نفسها.",
+                "تبقى الكرة البلاستيكية ساكنة."
+            ],
+            answer: 0,
+            explanation: "الكرة الحديدية كتلتها أكبر من الخشبية (لنفس الحجم)، لذا سيكون زخمها الحركي وقوة دفعها عند الاصطدام أكبر، مما يدفع الكرة البلاستيكية نحو جهة الكرة الخشبية الأضعف زخماً."
+        },
+        {
+            category: 'science', domain: 'الاستدلال العلمي',
+            question: "في تجربة، تم وضع مسمار معدني وقلم رصاص خشبي في دائرة كهربائية بسيطة مع بطارية ومصباح. أي المواد ستسمح للمصباح بالإضاءة؟",
+            options: [
+                "القلم الخشبي فقط.",
+                "المسمار المعدني فقط.",
+                "كلاهما سيسمح بالإضاءة.",
+                "لا شيء مما سبق."
+            ],
+            answer: 1,
+            explanation: "المعادن (مثل المسمار) موصلة جيدة للتيار الكهربائي، بينما الخشب مادة عازلة."
+        },
+
+        // --- المرونة العقلية ---
+        {
+            category: 'flexibility', domain: 'المرونة العقلية',
+            question: "إذا افترضنا صحة العبارة التالية: (كل العصافير تنهق وبعضها يغوص، وكل الأسود تغوص وبعضها ينهق). بناءً على هذا المنطق الافتراضي، يمكن القول بشكل قاطع أن:",
+            options: [
+                "كل العصافير والأسود تغوص.",
+                "بعض الأسود تنهق ولا تغوص.",
+                "بعض الأسود وكل العصافير تنهق.",
+                "كل العصافير تنهق وتغوص."
+            ],
+            answer: 2,
+            explanation: "نحلل المعطيات حرفياً: 'كل العصافير تنهق'، و'بعض الأسود ينهق'. بجمع هذين الاستنتاجين نصل لخيار 'بعض الأسود وكل العصافير تنهق'."
+        },
+        {
+            category: 'flexibility', domain: 'المرونة العقلية',
+            question: "عبدالله أطول من محمد. ومحمد أقصر من خالد، ولكنه أطول من محمود. فأي الأربعة أقصر؟",
+            options: ["عبدالله", "محمد", "خالد", "محمود"],
+            answer: 3,
+            explanation: "نرتب الأطوال: محمد أطول من محمود. وعبدالله وخالد كلاهما أطول من محمد. بالتالي، محمود هو الأقصر على الإطلاق."
+        },
+        {
+            category: 'flexibility', domain: 'المرونة العقلية',
+            question: "تخرج محمد من الجامعة قبل وليد الذي تخرج بعد زيد وقبل أحمد. فأي الأربعة كان آخرهم تخرجاً؟",
+            options: ["محمد", "وليد", "زيد", "أحمد"],
+            answer: 3,
+            explanation: "محمد وزيد تخرجا قبل وليد. ووليد تخرج قبل أحمد. إذن الترتيب (من الأقدم للأحدث): محمد/زيد ثم وليد ثم أحمد. أحمد هو الأخير."
+        },
+        {
+            category: 'flexibility', domain: 'المرونة العقلية',
+            question: "إذا كانت الطاولة تُعد 'طائرة' في لغة افتراضية، وأنت ذاهب للمطار، فإن الطاولة في هذا السياق تُستخدم لـ:",
+            options: ["وضع الكتب عليها.", "السفر.", "تناول الطعام.", "الرياضة."],
+            answer: 1,
+            explanation: "بما أن الطاولة أصبحت تعني 'طائرة' استناداً لمعطيات السؤال، والطائرة تستخدم للسفر، فإن الإجابة المنطقية بناءً على الفرضية هي السفر."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let timerInterval = null;
+    let timeElapsed = 0; // الوقت بالثواني تصاعدي
+
+    const optionLetters = ['أ', 'ب', 'ج', 'د'];
+
+    function startExam(category) {
+        if (category === 'all') {
+            currentQuestions = [...questionBank];
+        } else {
+            currentQuestions = questionBank.filter(q => q.category === category);
+        }
+
+        // خلط الأسئلة عشوائياً (Shuffle)
+        currentQuestions.sort(() => Math.random() - 0.5);
+
+        currentIndex = 0;
+        userAnswers = {};
+        timeElapsed = 0;
+
+        document.getElementById('selectionPanel').style.display = 'none';
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('examPanel').style.display = 'block';
+        document.getElementById('qTotal').textContent = currentQuestions.length;
+
+        startTimer();
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = currentQuestions[currentIndex];
+        document.getElementById('qCurrent').textContent = currentIndex + 1;
+        document.getElementById('sectionDisplay').textContent = q.domain;
+        
+        // إدراج السؤال مع السماح بـ HTML (للكسور)
+        document.getElementById('questionText').innerHTML = q.question.replace(/\n/g, '<br>');
+
+        const pBox = document.getElementById('passageBox');
+        if (q.passage) {
+            pBox.innerHTML = q.passage;
+            pBox.style.display = 'block';
+        } else {
+            pBox.style.display = 'none';
+        }
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const li = document.createElement('li');
+            li.className = 'option-item' + (userAnswers[currentIndex] === idx ? ' selected' : '');
+            li.innerHTML = `<span>${opt}</span> <span class="opt-letter">${optionLetters[idx]}</span>`;
+            li.onclick = () => selectOption(idx);
+            container.appendChild(li);
+        });
+
+        // تحكم أزرار التنقل
+        document.getElementById('prevBtn').disabled = currentIndex === 0;
+        
+        if (currentIndex === currentQuestions.length - 1) {
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'inline-block';
+        } else {
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('submitBtn').style.display = 'none';
+        }
+    }
+
+    function selectOption(idx) {
+        userAnswers[currentIndex] = idx;
+        renderQuestion();
+    }
+
+    function navigateQuestion(step) {
+        if (currentIndex + step >= 0 && currentIndex + step < currentQuestions.length) {
+            currentIndex += step;
+            renderQuestion();
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+        const s = (timeElapsed % 60).toString().padStart(2, '0');
+        document.getElementById('timer').textContent = `${m}:${s}`;
+    }
+
+    function finishExam() {
+        clearInterval(timerInterval);
+        document.getElementById('examPanel').style.display = 'none';
+        document.getElementById('resultPanel').style.display = 'block';
+
+        let correct = 0;
+        const reviewBox = document.getElementById('reviewContainer');
+        reviewBox.innerHTML = '';
+
+        currentQuestions.forEach((q, i) => {
+            const isCorrect = userAnswers[i] === q.answer;
+            if (isCorrect) correct++;
+
+            const userAnswerText = userAnswers[i] !== undefined 
+                ? `${optionLetters[userAnswers[i]]}) ${q.options[userAnswers[i]]}` 
+                : 'لم يتم الإجابة';
+                
+            const correctAnswerText = `${optionLetters[q.answer]}) ${q.options[q.answer]}`;
+
+            const item = document.createElement('div');
+            item.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+            item.innerHTML = `
+                <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">س${i + 1}: ${q.question}</p>
+                <p style="margin: 4px 0;">
+                    إجابتك: <span class="${isCorrect ? 'correct-ans' : 'wrong-ans'}">${userAnswerText}</span>
+                    ${isCorrect ? ' ✔️' : ' ❌'}
+                </p>
+                ${!isCorrect ? `<p style="margin: 4px 0;">الإجابة الصحيحة: <span class="correct-ans">${correctAnswerText}</span></p>` : ''}
+                <div class="explanation"><strong>شرح الحل:</strong> ${q.explanation}</div>
+            `;
+            reviewBox.appendChild(item);
+        });
+
+        // حساب النسبة
+        const total = currentQuestions.length;
+        const percent = Math.round((correct / total) * 100);
+        document.getElementById('scorePercent').textContent = percent + '%';
+        document.getElementById('scoreSummary').textContent = `لقد أجبت بشكل صحيح على ${correct} من أصل ${total} سؤالاً.`;
+        
+        const m = Math.floor(timeElapsed / 60);
+        const s = timeElapsed % 60;
+        document.getElementById('timeSummary').textContent = `الوقت المستغرق: ${m} دقيقة و ${s} ثانية.`;
+
+        // التقييم بناءً على معايير كتاب موهبة
+        const badge = document.getElementById('evaluationBadge');
+        if (percent >= 88) {
+            badge.textContent = "ممتاز جداً 🌟";
+            badge.className = "eval-badge eval-excellent-plus";
+        } else if (percent >= 76) {
+            badge.textContent = "ممتاز ⭐";
+            badge.className = "eval-badge eval-excellent";
+        } else if (percent >= 60) {
+            badge.textContent = "جيد جداً 👍";
+            badge.className = "eval-badge eval-vgood";
+        } else if (percent >= 48) {
+            badge.textContent = "جيد 📈";
+            badge.className = "eval-badge eval-good";
+        } else if (percent >= 28) {
+            badge.textContent = "مقبول ⚠️";
+            badge.className = "eval-badge eval-acceptable";
+        } else {
+            badge.textContent = "غير مرضي (بحاجة لتدريب مكثف) ❌";
+            badge.className = "eval-badge eval-poor";
+        }
+    }
+
+    function resetToHome() {
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('selectionPanel').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
