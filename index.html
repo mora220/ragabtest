@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mawhiba Level 2 - Comprehensive Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #3b82f6;
+            --accent: #f59e0b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), #1e293b);
+            color: white;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .author-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2.5rem auto;
+            padding: 0 1rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Selection Screen */
+        .selection-panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .card-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-btn:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.1);
+            background: white;
+        }
+
+        .card-btn h3 {
+            font-size: 1.15rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .card-btn p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Exam Screen */
+        .exam-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .exam-header {
+            background: #f1f5f9;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
+        }
+
+        .timer-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: monospace;
+            border: 1px solid #bae6fd;
+        }
+
+        .exam-body { padding: 2.5rem 2rem; }
+
+        .passage-box {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            border-radius: 4px;
+            color: #166534;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* Math Fractions CSS */
+        .math-frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            font-weight: bold;
+            margin: 0 4px;
+            font-size: 0.9em;
+        }
+        .math-frac .num {
+            border-bottom: 2px solid currentColor;
+            padding: 0 4px;
+            line-height: 1.2;
+        }
+        .math-frac .den {
+            padding: 0 4px;
+            line-height: 1.2;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .option-item:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .option-item.selected {
+            background: #eff6ff;
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        .opt-letter {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e2e8f0;
+            margin-right: 15px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .option-item.selected .opt-letter {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .exam-footer {
+            padding: 1.5rem 2rem;
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background: #334155; }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { background: #15803d; }
+
+        /* Result Screen (Arabic RTL Support) */
+        .result-panel {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+        }
+
+        .rtl-text { direction: rtl; text-align: center; font-family: 'Cairo', sans-serif; }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin: 2rem auto;
+            border: 6px solid var(--primary-light);
+        }
+
+        .eval-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .eval-excellent-plus { background: #15803d; } 
+        .eval-excellent { background: #0ea5e9; }      
+        .eval-vgood { background: #eab308; }          
+        .eval-good { background: #f97316; }           
+        .eval-acceptable { background: #64748b; }     
+        .eval-poor { background: #ef4444; }           
+
+        .review-list {
+            margin-top: 3rem;
+            text-align: left;
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .review-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+        .review-item:last-child { border-bottom: none; }
+
+        .review-item.correct { border-left: 5px solid var(--success); padding-left: 1.2rem; }
+        .review-item.incorrect { border-left: 5px solid var(--danger); padding-left: 1.2rem; }
+
+        .explanation {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand-title">Mawhiba CBT Assessment</div>
+    <div class="author-tag">Prepared by: Mr. Mohamed Ragab</div>
+</header>
+
+<div class="container">
+    <!-- Category Selection -->
+    <div id="selectionPanel" class="selection-panel">
+        <h2 class="section-title">Select Training Module</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Choose a specific cognitive domain to practice under standardized testing conditions.</p>
+        
+        <div class="category-grid">
+            <div class="card-btn" onclick="startExam('all')" style="border-color: var(--primary-light); background: #eff6ff;">
+                <h3>Full Comprehensive Test</h3>
+                <p>Mixed exam covering all 8 cognitive domains randomly.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('verbal_analogy')">
+                <h3>Verbal: Analogies & Classification</h3>
+                <p>Word relationships, semantic categories, and odd-one-out.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('verbal_reading')">
+                <h3>Verbal: Reading Comprehension</h3>
+                <p>Passage analysis, inference, and contextual deductions.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('math_arithmetic')">
+                <h3>Math: Arithmetic & Algebra</h3>
+                <p>Fractions, percentages, equations, and word problems.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('math_spatial')">
+                <h3>Math: Geometry & Spatial</h3>
+                <p>Areas, perimeters, dimensions, and shape transformations.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('science_mech')">
+                <h3>Science: Mechanical Reasoning</h3>
+                <p>Pulleys, gears, levers, and mechanical advantage.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('science_phys')">
+                <h3>Science: Physical & Natural Laws</h3>
+                <p>Circuits, gravity, friction, and biology basics.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('logic_deduction')">
+                <h3>Flexibility: Logic & Deductions</h3>
+                <p>Syllogisms, assumptions, and conditional ordering.</p>
+            </div>
+            <div class="card-btn" onclick="startExam('logic_patterns')">
+                <h3>Flexibility: Pattern Recognition</h3>
+                <p>Visual sequences, matrices, and number series.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Interface -->
+    <div id="examPanel" class="exam-panel">
+        <div class="exam-header">
+            <div>
+                <strong id="sectionDisplay" style="color: var(--primary-light);">Section Name</strong>
+                <span style="margin: 0 10px; color: var(--border);">|</span>
+                Question <span id="qCurrent" style="font-weight: 800;">1</span> of <span id="qTotal">10</span>
+            </div>
+            <div class="timer-badge">
+                ⏱️ <span id="timer">00:00</span>
+            </div>
+        </div>
+
+        <div class="exam-body">
+            <div id="passageBox" class="passage-box" style="display:none;"></div>
+            <div class="question-text" id="questionText">Question goes here...</div>
+            <ul class="options-list" id="optionsContainer"></ul>
+        </div>
+
+        <div class="exam-footer">
+            <button class="btn" style="background: #e2e8f0; color: #0f172a;" id="prevBtn" onclick="navigateQuestion(-1)">Previous</button>
+            <div>
+                <button class="btn" id="nextBtn" onclick="navigateQuestion(1)">Next Question</button>
+                <button class="btn btn-success" id="submitBtn" style="display:none;" onclick="finishExam()">Submit Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="resultPanel" class="result-panel">
+        <h2 class="section-title rtl-text">تقرير الأداء والتقييم الشامل</h2>
+        <p class="rtl-text" style="color: var(--text-muted); font-size: 1.1rem;">مقياس موهبة للقدرات العقلية المتعددة</p>
+        
+        <div class="score-circle" id="scorePercent">0%</div>
+        
+        <div id="evaluationBadge" class="eval-badge">ممتاز</div>
+        
+        <p id="scoreSummary" class="rtl-text" style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem;"></p>
+        <p id="timeSummary" class="rtl-text" style="font-size: 1.1rem; color: var(--text-muted);"></p>
+        
+        <div class="review-list">
+            <h3 style="margin-bottom: 1.5rem; color: var(--primary); border-bottom: 2px solid var(--border); padding-bottom: 10px;">Review & Explanations:</h3>
+            <div id="reviewContainer"></div>
+        </div>
+
+        <button class="btn" style="margin-top: 3rem; font-size: 1.2rem; padding: 1rem 3rem;" onclick="resetToHome()">Return to Dashboard</button>
+    </div>
+</div>
+
+<script>
+    // Comprehensive Question Bank covering all 8 domains
+    const questionBank = [
+        // 1. Verbal: Analogies & Classification
+        {
+            category: 'verbal_analogy', domain: 'Verbal Analogies',
+            question: "Human : Breathe : Life\nFlower : Thirst : ?",
+            options: ["Pluck", "Color", "Uproot", "Wilt"],
+            answer: 3,
+            explanation: "Breathing gives life to a human, just as thirst causes a flower to wilt (cause and ultimate effect)."
+        },
+        {
+            category: 'verbal_analogy', domain: 'Verbal Classification',
+            question: "Identify the odd word out:",
+            options: ["Morning", "Dusk", "Twilight", "Dawn"],
+            answer: 1,
+            explanation: "Morning, Twilight, and Dawn are associated with the beginning of the day or presence of light, whereas Dusk (or deep night/Ghasaq) represents darkness."
+        },
+        {
+            category: 'verbal_analogy', domain: 'Verbal Analogies',
+            question: "Wood : Door :: ?",
+            options: ["Candy : Sugar", "Key : Handle", "Clay : Brick", "Dress : Fabric"],
+            answer: 2,
+            explanation: "Wood is the raw material used to make a door. Clay is the raw material used to make a brick."
+        },
+        {
+            category: 'verbal_analogy', domain: 'Verbal Analogies',
+            question: "Helmet : Head :: ?",
+            options: ["School : Classroom", "Glasses : Eyes", "Pen : Notebook", "Book : Line"],
+            answer: 1,
+            explanation: "A helmet protects/covers the head, just as glasses cover and protect the eyes."
+        },
+
+        // 2. Verbal: Reading Comprehension
+        {
+            category: 'verbal_reading', domain: 'Reading Comprehension',
+            passage: "A little ant was climbing up a wall when she encountered a spiderweb. Inspecting the delicate threads, she asked the spider: 'Why don’t you go out and work as we do?' The spider replied: 'I earn my livelihood while resting here.' Soon, a fly was trapped in the web, and the spider sprang to wrap it. The ant said: 'I earn my sustenance solely through earnest diligence and hard work, not deception.'",
+            question: "What is the core moral articulated by the ant in the passage?",
+            options: [
+                "Survival requires hunting smaller prey.",
+                "Spiders weave the most efficient traps.",
+                "Livelihood must be gained through genuine hard work and diligence.",
+                "Insects should collaborate in community groups."
+            ],
+            answer: 2,
+            explanation: "The ant explicitly stated that honor and sustenance come through earnest diligence and hard work rather than traps (deception)."
+        },
+        {
+            category: 'verbal_reading', domain: 'Reading Comprehension',
+            passage: "The human mouth is full of teeth and molars that act like a mill to cut and grind food, give a beautiful appearance to the face, and help pronounce letters properly. Tooth decay is a dangerous disease caused by bacteria naturally present in the mouth. It occurs due to general body weakness, excessive consumption of sugars, and lack of dental hygiene.",
+            question: "Based on the text, what does the author compare the function of teeth to?",
+            options: ["A mill", "A machine", "Pearls", "White snow"],
+            answer: 0,
+            explanation: "The text directly states: 'act like a mill to cut and grind food'."
+        },
+        {
+            category: 'verbal_reading', domain: 'Reading Comprehension',
+            passage: "Every Thursday afternoon, Yasser walks to the local neighborhood supermarket to purchase fresh fruits. Directly afterward, he proceeds to the community sports complex where he swims continuously for one full hour.",
+            question: "Which of the following statements is directly confirmed by the text?",
+            options: [
+                "Yasser stays at the market for precisely sixty minutes.",
+                "Yasser swims every single day of the week.",
+                "Yasser buys fresh fruit on Thursday afternoons.",
+                "Yasser is preparing to join the school swimming team."
+            ],
+            answer: 2,
+            explanation: "The text explicitly mentions his routine of buying fresh fruit on Thursday afternoons."
+        },
+
+        // 3. Math: Arithmetic & Algebra
+        {
+            category: 'math_arithmetic', domain: 'Arithmetic',
+            question: "On a farm, a visitor observed a group of sheep. He counted 28 legs and 14 eyes in total. How many sheep were there?",
+            options: ["7", "14", "21", "42"],
+            answer: 0,
+            explanation: "Each sheep has 2 eyes and 4 legs. 14 eyes ÷ 2 = 7 sheep. (Check: 7 sheep × 4 legs = 28 legs)."
+        },
+        {
+            category: 'math_arithmetic', domain: 'Arithmetic',
+            question: "Evaluate: 200 ÷ <span class='math-frac'><span class='num'>1</span><span class='den'>2</span></span> + 20 =",
+            options: ["120", "220", "320", "420"],
+            answer: 3,
+            explanation: "Dividing by 1/2 is the same as multiplying by 2. So, (200 × 2) + 20 = 400 + 20 = 420."
+        },
+        {
+            category: 'math_arithmetic', domain: 'Arithmetic',
+            question: "Saeed has 600 Riyals in his bank account. He spent 360 Riyals on clothes, 100 Riyals on food, and wrote a check for 180 Riyals for a watch. What is Saeed's financial situation at the end of the day?",
+            options: [
+                "He has 40 Riyals remaining in the bank.",
+                "He has a deficit of 40 Riyals.",
+                "His balance is exactly zero.",
+                "He has 60 Riyals remaining."
+            ],
+            answer: 1,
+            explanation: "Total spent = 360 + 100 + 180 = 640 Riyals. Since he only had 600, he is short by 40 Riyals (a deficit)."
+        },
+        {
+            category: 'math_arithmetic', domain: 'Algebra',
+            question: "A driver traveled 100 km from a village to the city at a speed of 50 km/h. On the return trip, it took him exactly 3 hours. What was his average speed for the entire round trip?",
+            options: ["45 km/h", "50 km/h", "40 km/h", "35 km/h"],
+            answer: 2,
+            explanation: "Total distance = 100 + 100 = 200 km. Time for first leg = 100/50 = 2 hours. Total time = 2 + 3 = 5 hours. Average speed = 200 km ÷ 5 hours = 40 km/h."
+        },
+
+        // 4. Math: Geometry & Spatial
+        {
+            category: 'math_spatial', domain: 'Geometry',
+            question: "A rectangular room is 6 meters long and 4 meters wide. It needs to be covered with square tiles. If the area of each tile is <span class='math-frac'><span class='num'>1</span><span class='den'>2</span></span> square meter, how many tiles are required?",
+            options: ["12 tiles", "24 tiles", "36 tiles", "48 tiles"],
+            answer: 3,
+            explanation: "Area of the room = 6 × 4 = 24 sq meters. Since each tile is 0.5 sq meters, you need 2 tiles per square meter. 24 × 2 = 48 tiles."
+        },
+        {
+            category: 'math_spatial', domain: 'Geometry',
+            question: "A regular hexagon has a side length of 5 cm. What is its perimeter?",
+            options: ["11 cm", "25 cm", "30 cm", "28 cm"],
+            answer: 2,
+            explanation: "A regular hexagon has 6 equal sides. Perimeter = 6 × 5 cm = 30 cm."
+        },
+        {
+            category: 'math_spatial', domain: 'Geometry',
+            question: "A rectangle has an area of 50 cm² and a length of 10 cm. What is its perimeter?",
+            options: ["60 cm", "45 cm", "30 cm", "15 cm"],
+            answer: 2,
+            explanation: "Width = Area ÷ Length = 50 ÷ 10 = 5 cm. Perimeter = 2 × (Length + Width) = 2 × (10 + 5) = 2 × 15 = 30 cm."
+        },
+
+        // 5. Science: Mechanical Reasoning
+        {
+            category: 'science_mech', domain: 'Mechanical Reasoning',
+            question: "Pulley (A) has a radius of 3 cm and rotates clockwise. Pulley (B) has a radius of 1 cm and is connected to it via a continuous uncrossed belt. When Pulley (A) completes 1 full revolution, Pulley (B) will make:",
+            options: [
+                "1 revolution clockwise",
+                "2 revolutions counter-clockwise",
+                "3 revolutions clockwise",
+                "3 revolutions counter-clockwise"
+            ],
+            answer: 2,
+            explanation: "The ratio of their radii is 3:1, meaning the smaller pulley rotates 3 times for every 1 rotation of the larger one. An uncrossed belt means they rotate in the same direction (clockwise)."
+        },
+        {
+            category: 'science_mech', domain: 'Mechanical Reasoning',
+            question: "Three interlocking gears (A, B, C) are placed in a straight line. If Gear A (left) turns clockwise, in which direction will Gear C (right) turn?",
+            options: ["Clockwise", "Counter-clockwise", "It will not turn", "Alternating directions"],
+            answer: 0,
+            explanation: "Adjacent gears turn in opposite directions. A turns clockwise -> B turns counter-clockwise -> C turns clockwise."
+        },
+        {
+            category: 'science_mech', domain: 'Mechanical Reasoning',
+            question: "Which of the following methods requires the least amount of force to move a heavy block across a smooth, frictionless floor?",
+            options: [
+                "Pulling it upward at a 45-degree angle.",
+                "Pulling it perfectly horizontal (parallel) to the floor.",
+                "Pushing it downward at a 45-degree angle.",
+                "Lifting it completely off the ground and carrying it."
+            ],
+            answer: 1,
+            explanation: "Force applied parallel to the direction of motion on a frictionless surface is the most efficient, as all the force vector contributes to horizontal movement without adding to the normal force (friction) or fighting gravity directly."
+        },
+
+        // 6. Science: Physical & Natural Laws
+        {
+            category: 'science_phys', domain: 'Physical Laws',
+            question: "An iron ball and a wooden ball of the exact same size roll down a frictionless ramp and strike a stationary plastic ball at the bottom. What will happen?",
+            options: [
+                "The plastic ball will be pushed towards the iron ball.",
+                "The plastic ball will be pushed towards the wooden ball.",
+                "The plastic ball will remain perfectly still.",
+                "The plastic ball will spin in place."
+            ],
+            answer: 1,
+            explanation: "The iron ball has a greater mass (and therefore greater momentum) than the wooden ball. The net force pushes the plastic ball away from the heavier iron ball, towards the wooden ball."
+        },
+        {
+            category: 'science_phys', domain: 'Circuits & Electricity',
+            question: "In a basic electrical circuit consisting of a battery and a light bulb, which of the following materials can be used to complete the circuit and turn on the light?",
+            options: ["A wooden stick", "A copper nail", "A rubber band", "A cotton string"],
+            answer: 1,
+            explanation: "Copper is a metal and an excellent conductor of electricity, whereas wood, rubber, and cotton are insulators."
+        },
+        {
+            category: 'science_phys', domain: 'Biology / Environment',
+            question: "Snow begins to fall at midnight, accumulating at a rate of 1.5 cm every 3 hours. What will the total thickness of the snow be at 6:00 AM?",
+            options: ["1.5 cm", "3.0 cm", "4.5 cm", "6.0 cm"],
+            answer: 1,
+            explanation: "From midnight to 6:00 AM is 6 hours. (6 hours / 3 hours) = 2 cycles of snow. 2 × 1.5 cm = 3.0 cm."
+        },
+
+        // 7. Flexibility: Logic & Deductions
+        {
+            category: 'logic_deduction', domain: 'Logic',
+            question: "Assume: 'All birds bray and some birds dive. All lions dive and some lions bray.' Based strictly on these premises, which deduction must be true?",
+            options: [
+                "All lions and birds dive.",
+                "Some lions bray and do not dive.",
+                "All birds both bray and dive.",
+                "Some lions and all birds bray."
+            ],
+            answer: 3,
+            explanation: "Directly satisfies the premises: since 'all birds bray' and 'some lions bray' are stated facts, 'Some lions and all birds bray' is logically confirmed."
+        },
+        {
+            category: 'logic_deduction', domain: 'Ordering & Ranking',
+            question: "Abdullah is taller than Mohammed. Mohammed is shorter than Khalid, but taller than Mahmoud. Who is the shortest among all four?",
+            options: ["Abdullah", "Mohammed", "Khalid", "Mahmoud"],
+            answer: 3,
+            explanation: "Mohammed is taller than Mahmoud. Abdullah and Khalid are taller than Mohammed. Therefore, Mahmoud is at the bottom of the height ranking."
+        },
+        {
+            category: 'logic_deduction', domain: 'Ordering & Ranking',
+            question: "Mohammed graduated from university before Waleed, who graduated after Zaid and before Ahmed. Who was the last to graduate?",
+            options: ["Mohammed", "Waleed", "Zaid", "Ahmed"],
+            answer: 3,
+            explanation: "Mohammed and Zaid graduated before Waleed. Waleed graduated before Ahmed. Thus, Ahmed is the latest (last) to graduate."
+        },
+        {
+            category: 'logic_deduction', domain: 'Logic',
+            question: "All squares have a hole in the middle. If a shape is a square, it might have a handle. Therefore:",
+            options: [
+                "All shapes have handles.",
+                "All squares have a hole in the middle.",
+                "Every square has a handle.",
+                "Some circles have handles."
+            ],
+            answer: 1,
+            explanation: "This is a direct restatement of the absolute premise given in the first sentence. The handle is only a 'might', so we can't assume all have handles."
+        },
+
+        // 8. Flexibility: Pattern Recognition
+        {
+            category: 'logic_patterns', domain: 'Pattern Recognition',
+            question: "Look at the number series: 2, 4, 8, 16, ... What comes next?",
+            options: ["24", "32", "64", "18"],
+            answer: 1,
+            explanation: "The pattern is multiplying the previous number by 2 (2x2=4, 4x2=8, 8x2=16, 16x2=32)."
+        },
+        {
+            category: 'logic_patterns', domain: 'Sequence Logic',
+            question: "If a digital clock shows 03:05, and a sequence adds 45 minutes each step, what will the 3rd step show? (Step 1: 03:50)",
+            options: ["04:35", "05:20", "04:50", "05:05"],
+            answer: 1,
+            explanation: "Base: 03:05. Step 1 (+45) = 03:50. Step 2 (+45) = 04:35. Step 3 (+45) = 05:20."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let timerInterval = null;
+    let timeElapsed = 0; 
+
+    const optionLetters = ['A', 'B', 'C', 'D'];
+
+    function startExam(category) {
+        if (category === 'all') {
+            currentQuestions = [...questionBank];
+        } else {
+            currentQuestions = questionBank.filter(q => q.category === category);
+        }
+
+        // Shuffle questions
+        currentQuestions.sort(() => Math.random() - 0.5);
+
+        currentIndex = 0;
+        userAnswers = {};
+        timeElapsed = 0;
+
+        document.getElementById('selectionPanel').style.display = 'none';
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('examPanel').style.display = 'block';
+        document.getElementById('qTotal').textContent = currentQuestions.length;
+
+        startTimer();
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = currentQuestions[currentIndex];
+        document.getElementById('qCurrent').textContent = currentIndex + 1;
+        document.getElementById('sectionDisplay').textContent = q.domain;
+        
+        document.getElementById('questionText').innerHTML = q.question.replace(/\n/g, '<br>');
+
+        const pBox = document.getElementById('passageBox');
+        if (q.passage) {
+            pBox.innerHTML = q.passage;
+            pBox.style.display = 'block';
+        } else {
+            pBox.style.display = 'none';
+        }
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+            const li = document.createElement('li');
+            li.className = 'option-item' + (userAnswers[currentIndex] === idx ? ' selected' : '');
+            li.innerHTML = `<span class="opt-letter">${optionLetters[idx]}</span> <span>${opt}</span>`;
+            li.onclick = () => selectOption(idx);
+            container.appendChild(li);
+        });
+
+        document.getElementById('prevBtn').disabled = currentIndex === 0;
+        
+        if (currentIndex === currentQuestions.length - 1) {
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'inline-block';
+        } else {
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            document.getElementById('submitBtn').style.display = 'none';
+        }
+    }
+
+    function selectOption(idx) {
+        userAnswers[currentIndex] = idx;
+        renderQuestion();
+    }
+
+    function navigateQuestion(step) {
+        if (currentIndex + step >= 0 && currentIndex + step < currentQuestions.length) {
+            currentIndex += step;
+            renderQuestion();
+        }
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+        const s = (timeElapsed % 60).toString().padStart(2, '0');
+        document.getElementById('timer').textContent = `${m}:${s}`;
+    }
+
+    function finishExam() {
+        clearInterval(timerInterval);
+        document.getElementById('examPanel').style.display = 'none';
+        document.getElementById('resultPanel').style.display = 'block';
+
+        let correct = 0;
+        const reviewBox = document.getElementById('reviewContainer');
+        reviewBox.innerHTML = '';
+
+        currentQuestions.forEach((q, i) => {
+            const isCorrect = userAnswers[i] === q.answer;
+            if (isCorrect) correct++;
+
+            const userAnswerText = userAnswers[i] !== undefined 
+                ? `${optionLetters[userAnswers[i]]}) ${q.options[userAnswers[i]]}` 
+                : 'Not Answered';
+                
+            const correctAnswerText = `${optionLetters[q.answer]}) ${q.options[q.answer]}`;
+
+            const item = document.createElement('div');
+            item.className = 'review-item ' + (isCorrect ? 'correct' : 'incorrect');
+            item.innerHTML = `
+                <p style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">Q${i + 1}: ${q.question}</p>
+                <p style="margin: 4px 0;">
+                    Your Answer: <span style="font-weight: 700; color: ${isCorrect ? 'var(--success)' : 'var(--danger)'}">${userAnswerText}</span>
+                    ${isCorrect ? ' ✔️' : ' ❌'}
+                </p>
+                ${!isCorrect ? `<p style="margin: 4px 0;">Correct Answer: <span style="font-weight: 700; color: var(--success)">${correctAnswerText}</span></p>` : ''}
+                <div class="explanation"><strong>Explanation:</strong> ${q.explanation}</div>
+            `;
+            reviewBox.appendChild(item);
+        });
+
+        // Calculate score
+        const total = currentQuestions.length;
+        const percent = Math.round((correct / total) * 100);
+        document.getElementById('scorePercent').textContent = percent + '%';
+        
+        // Arabic Evaluation Strings
+        document.getElementById('scoreSummary').textContent = `لقد أجبت بشكل صحيح على ${correct} من أصل ${total} سؤالاً.`;
+        
+        const m = Math.floor(timeElapsed / 60);
+        const s = timeElapsed % 60;
+        document.getElementById('timeSummary').textContent = `الوقت المستغرق: ${m} دقيقة و ${s} ثانية.`;
+
+        const badge = document.getElementById('evaluationBadge');
+        if (percent >= 88) {
+            badge.textContent = "ممتاز جداً 🌟";
+            badge.className = "eval-badge eval-excellent-plus";
+        } else if (percent >= 76) {
+            badge.textContent = "ممتاز ⭐";
+            badge.className = "eval-badge eval-excellent";
+        } else if (percent >= 60) {
+            badge.textContent = "جيد جداً 👍";
+            badge.className = "eval-badge eval-vgood";
+        } else if (percent >= 48) {
+            badge.textContent = "جيد 📈";
+            badge.className = "eval-badge eval-good";
+        } else if (percent >= 28) {
+            badge.textContent = "مقبول ⚠️";
+            badge.className = "eval-badge eval-acceptable";
+        } else {
+            badge.textContent = "غير مرضي (بحاجة لتدريب مكثف) ❌";
+            badge.className = "eval-badge eval-poor";
+        }
+    }
+
+    function resetToHome() {
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('selectionPanel').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
